@@ -1270,17 +1270,25 @@ const globalTooltipContainer=document.getElementById("globalTooltipContainer");
 let activeTooltipEl=null;
 
 function attachTraitTooltipHandlers(){
-    function fadeOutRemove(){
-        if(!activeTooltipEl) return;
-        activeTooltipEl.style.opacity = '0';
-        // remove after transition
-        setTimeout(()=>{
-            if(activeTooltipEl){ activeTooltipEl.remove(); activeTooltipEl = null; }
+    let fadeOutTimer = null;
+
+    function fadeOutRemove(tooltipToRemove){
+        if(!tooltipToRemove) return;
+        tooltipToRemove.style.opacity = '0';
+        
+        // sttackoverflow said to do this
+        if(fadeOutTimer) clearTimeout(fadeOutTimer);
+        
+        fadeOutTimer = setTimeout(()=>{
+            if(tooltipToRemove && tooltipToRemove.parentNode){ 
+                tooltipToRemove.remove();
+                if(activeTooltipEl === tooltipToRemove) activeTooltipEl = null;
+            }
+            fadeOutTimer = null;
         }, 160);
     }
 
     document.querySelectorAll('.trait-item').forEach(item=>{
-        // prevent double-attach
         if(item.dataset.tooltipAttached) return;
         item.dataset.tooltipAttached = '1';
 
@@ -1289,8 +1297,11 @@ function attachTraitTooltipHandlers(){
         tooltipContent.style.display = 'none';
 
         item.addEventListener('mouseenter',()=>{
-            // ensure any existing tooltip removed first
-            if(activeTooltipEl){ activeTooltipEl.remove(); activeTooltipEl = null; }
+            if(activeTooltipEl){ 
+                if(fadeOutTimer) clearTimeout(fadeOutTimer);
+                activeTooltipEl.remove(); 
+                activeTooltipEl = null; 
+            }
 
             const rect = item.getBoundingClientRect();
             const tip = document.createElement('div');
@@ -1299,7 +1310,6 @@ function attachTraitTooltipHandlers(){
             globalTooltipContainer.appendChild(tip);
             activeTooltipEl = tip;
 
-            // Position to the right; if off-screen, position left
             const leftPos = rect.right + 15;
             const topPos = rect.top;
             tip.style.left = leftPos + 'px';
@@ -1309,32 +1319,46 @@ function attachTraitTooltipHandlers(){
         });
 
         item.addEventListener('mouseleave',()=>{
-            fadeOutRemove();
+            fadeOutRemove(activeTooltipEl);
         });
 
         // hide tooltip on any click within the trait item (including buttons)
         item.addEventListener('click', (e)=>{
-            // allow the click to still perform its action
-            fadeOutRemove();
+            if(activeTooltipEl){
+                if(fadeOutTimer) clearTimeout(fadeOutTimer);
+                activeTooltipEl.remove();
+                activeTooltipEl = null;
+            }
         });
 
-        // specifically attach to adjust buttons inside the item as they may stop propagation
+        // specifically attach to adjust buttons
         const adjustBtns = item.querySelectorAll('.trait-adjust-btn');
         adjustBtns.forEach(btn=>{
             btn.addEventListener('click', (e)=>{
-                // ensure tooltip hides when clicking arrows
-                fadeOutRemove();
+                if(activeTooltipEl){
+                    if(fadeOutTimer) clearTimeout(fadeOutTimer);
+                    activeTooltipEl.remove();
+                    activeTooltipEl = null;
+                }
             });
-            // also hide on mousedown to ensure instant feedback
             btn.addEventListener('mousedown', ()=>{
-                fadeOutRemove();
+                if(activeTooltipEl){
+                    if(fadeOutTimer) clearTimeout(fadeOutTimer);
+                    activeTooltipEl.remove();
+                    activeTooltipEl = null;
+                }
             });
         });
 
-        // also hide when focusing the controls via keyboard (accessibility)
         const controls = item.querySelector('.trait-controls');
         if(controls){
-            controls.addEventListener('focusin', ()=> fadeOutRemove());
+            controls.addEventListener('focusin', ()=> {
+                if(activeTooltipEl){
+                    if(fadeOutTimer) clearTimeout(fadeOutTimer);
+                    activeTooltipEl.remove();
+                    activeTooltipEl = null;
+                }
+            });
         }
     });
 }
