@@ -1231,7 +1231,7 @@
         // Initialize the board on load
         initializeBoard();
 
-        // Trait descriptions
+        // Trait descriptions (template - can be customized)
         const traitDescriptions = {
             "Xianzhou": "",
             "Wolf Hunt": "",
@@ -1268,27 +1268,77 @@
 <script>
 const globalTooltipContainer=document.getElementById("globalTooltipContainer");
 let activeTooltipEl=null;
+
 function attachTraitTooltipHandlers(){
- document.querySelectorAll('.trait-item').forEach(item=>{
-   const tooltipContent=item.querySelector('.trait-tooltip');
-   if(!tooltipContent)return;
-   tooltipContent.style.display='none';
-   item.addEventListener('mouseenter',()=>{
-     const rect=item.getBoundingClientRect();
-     const tip=document.createElement('div');
-     tip.className='global-tooltip';
-     tip.innerHTML=tooltipContent.innerHTML;
-     globalTooltipContainer.appendChild(tip);
-     activeTooltipEl=tip;
-     tip.style.left=(rect.right+15)+'px';
-     tip.style.top=rect.top+'px';
-     requestAnimationFrame(()=>tip.style.opacity=1);
-   });
-   item.addEventListener('mouseleave',()=>{
-     if(activeTooltipEl){activeTooltipEl.remove();activeTooltipEl=null;}
-   });
- });
+    function fadeOutRemove(){
+        if(!activeTooltipEl) return;
+        activeTooltipEl.style.opacity = '0';
+        // remove after transition
+        setTimeout(()=>{
+            if(activeTooltipEl){ activeTooltipEl.remove(); activeTooltipEl = null; }
+        }, 160);
+    }
+
+    document.querySelectorAll('.trait-item').forEach(item=>{
+        // prevent double-attach
+        if(item.dataset.tooltipAttached) return;
+        item.dataset.tooltipAttached = '1';
+
+        const tooltipContent = item.querySelector('.trait-tooltip');
+        if(!tooltipContent) return;
+        tooltipContent.style.display = 'none';
+
+        item.addEventListener('mouseenter',()=>{
+            // ensure any existing tooltip removed first
+            if(activeTooltipEl){ activeTooltipEl.remove(); activeTooltipEl = null; }
+
+            const rect = item.getBoundingClientRect();
+            const tip = document.createElement('div');
+            tip.className = 'global-tooltip';
+            tip.innerHTML = tooltipContent.innerHTML;
+            globalTooltipContainer.appendChild(tip);
+            activeTooltipEl = tip;
+
+            // Position to the right; if off-screen, position left
+            const leftPos = rect.right + 15;
+            const topPos = rect.top;
+            tip.style.left = leftPos + 'px';
+            tip.style.top = topPos + 'px';
+
+            requestAnimationFrame(()=> tip.style.opacity = 1);
+        });
+
+        item.addEventListener('mouseleave',()=>{
+            fadeOutRemove();
+        });
+
+        // hide tooltip on any click within the trait item (including buttons)
+        item.addEventListener('click', (e)=>{
+            // allow the click to still perform its action
+            fadeOutRemove();
+        });
+
+        // specifically attach to adjust buttons inside the item as they may stop propagation
+        const adjustBtns = item.querySelectorAll('.trait-adjust-btn');
+        adjustBtns.forEach(btn=>{
+            btn.addEventListener('click', (e)=>{
+                // ensure tooltip hides when clicking arrows
+                fadeOutRemove();
+            });
+            // also hide on mousedown to ensure instant feedback
+            btn.addEventListener('mousedown', ()=>{
+                fadeOutRemove();
+            });
+        });
+
+        // also hide when focusing the controls via keyboard (accessibility)
+        const controls = item.querySelector('.trait-controls');
+        if(controls){
+            controls.addEventListener('focusin', ()=> fadeOutRemove());
+        }
+    });
 }
+
 const originalUpdateTraitsDisplay=updateTraitsDisplay;
 updateTraitsDisplay=function(){originalUpdateTraitsDisplay();attachTraitTooltipHandlers();}
 </script>
