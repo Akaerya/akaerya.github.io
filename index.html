@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Board Builder</title>
+    <style>        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 40px);
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .back-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 5px 5px;
+            transition: transform 0.2s;
+            font-size: 0.85em;
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 15px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .traits-panel {
+            grid-column: 1;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-column {
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-height: 0;
+        }
+
+        .board-area {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 490px;
+            flex-shrink: 0;
+        }
+
+        .units-pool {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .board {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .board-title {
+            font-size: 1.3em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .board-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .board-row-label {
+            font-size: 0.85em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .board-tile {
+            width: 85px;
+            height: 85px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            border: 3px dashed #ccc;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .board-tile:hover {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .board-tile.drag-over {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            border-color: #00b894;
+            transform: scale(1.1);
+        }
+
+        .board-tile.occupied {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-image: var(--unit-bg-image, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+            background-size: cover;
+            background-position: center;
+            border: 3px solid #764ba2;
+            cursor: move;
+        }
+
+        .tile-unit {
+            color: white;
+            font-weight: bold;
+            font-size: 0.85em;
+            text-align: center;
+            padding: 5px;
+            line-height: 1.2;
+        }
+
+        .tile-cost {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            background: #ffd700;
+            color: #333;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+
+        .remove-tile {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #f5576c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-weight: bold;
+            display: none;
+            z-index: 10;
+        }
+
+        .board-tile.occupied:hover .remove-tile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .traits-panel {
+            grid-column: 1;
+            grid-row: 1;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .traits-title {
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+            flex-shrink: 0;
+        }
+
+        #traitsDisplay {
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 5px;
+        }
+
+        #traitsDisplay::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #traitsDisplay::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        #traitsDisplay::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        #traitsDisplay::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        .trait-item {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ccc;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .trait-controls {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 3px;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .trait-adjust-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.7em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            pointer-events: auto;
+        }
+
+        .trait-adjust-btn:hover {
+            background: #764ba2;
+        }
+
+        .trait-manual-count {
+            font-size: 0.7em;
+            color: #f5576c;
+            font-weight: bold;
+            min-width: 12px;
+            text-align: center;
+        }
+
+        .trait-item:hover {
+            transform: translateX(3px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .trait-item.active-1 {
+            background: linear-gradient(135deg, #CD7F32 0%, #B87333 100%);
+            border-left: 4px solid #8B4513;
+            color: white;
+        }
+
+        .trait-item.active-2 {
+            background: linear-gradient(135deg, #C0C0C0 0%, #A8A8A8 100%);
+            border-left: 4px solid #808080;
+            color: white;
+        }
+
+        .trait-item.active-3 {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-left: 4px solid #DAA520;
+            color: white;
+        }
+
+        .trait-item.active-4 {
+            background: linear-gradient(135deg, #E8E8E8 0%, #FFD700 25%, #FF69B4 50%, #00CED1 75%, #E8E8E8 100%);
+            background-size: 200% 200%;
+            animation: prismatic 3s ease infinite;
+            border-left: 4px solid #FFD700;
+            color: #333;
+            font-weight: bold;
+        }
+
+        @keyframes prismatic {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .trait-item.active-1 .trait-count,
+        .trait-item.active-2 .trait-count,
+        .trait-item.active-3 .trait-count {
+            color: white;
+        }
+
+        .trait-item.active-1 .trait-thresholds,
+        .trait-item.active-2 .trait-thresholds,
+        .trait-item.active-3 .trait-thresholds {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .trait-item.active-4 .trait-count {
+            color: #333;
+        }
+
+        .trait-item.active-4 .trait-thresholds {
+            color: #555;
+        }
+
+        .trait-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            margin-left: 15px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            width: 300px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            z-index: 10000;
+            transition: opacity 0.3s, visibility 0.3s;
+            pointer-events: none;
+        }
+
+        .trait-item:hover .trait-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .trait-tooltip-title {
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .trait-tooltip-description {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .trait-tooltip-units-title {
+            font-size: 0.95em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .trait-tooltip-units {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .trait-tooltip-unit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 0.75em;
+        }
+
+        .trait-name {
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .trait-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .trait-count {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .trait-thresholds {
+            font-size: 0.75em;
+            color: #666;
+        }
+
+        .pool-title {
+            font-size: 1.1em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .pool-search {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+            flex-shrink: 0;
+        }
+
+        .pool-units {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            align-content: start;
+        }
+
+        .pool-units::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .pool-units::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .pool-units::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .pool-units::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        .unit-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-image: var(--unit-bg-image, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: grab;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: relative;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .unit-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .unit-card:active {
+            cursor: grabbing;
+        }
+
+        .unit-card.dragging {
+            opacity: 0.5;
+        }
+
+        .unit-card.used {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .unit-name {
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            justify-content: center;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .unit-name span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .position-indicator {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex-shrink: 0;
+        }
+
+        .position-box {
+            width: 8px;
+            height: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            background: transparent;
+        }
+
+        .position-box.filled {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .unit-cost {
+            background: #ffd700;
+            color: #333;
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 0.75em;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .unit-traits {
+            font-size: 0.65em;
+            margin-top: 5px;
+            opacity: 0.85;
+            line-height: 1.2;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 12px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 110px;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            opacity: 0.9;
+        }
+
+        .stat-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-top: 3px;
+        }
+
+        .clear-board {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 8px;
+            font-size: 0.9em;
+        }
+
+        .clear-board:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 1400px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .traits-panel {
+                max-height: 300px;
+            }
+
+            .right-column {
+                min-height: 600px;
+            }
+        }
+    
+#globalTooltipContainer{position:absolute;top:0;left:0;z-index:999999;pointer-events:none;}
+.global-tooltip{position:absolute;background:white;border:2px solid #667eea;border-radius:10px;padding:15px;width:300px;box-shadow:0 8px 20px rgba(0,0,0,0.3);opacity:0;transition:opacity .15s;pointer-events:none;}
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Team Board Builder</h1>
+            <p style="margin-bottom: 10px;">Drag units onto the board to build your team</p>
+            <a href="autochess-units.html" class="back-link">📚 Units Database</a>
+            <a href="team-calculator.html" class="back-link">🔧 Team Calculator</a>
+        </header>
+
+        <div class="main-content">
+            <div class="traits-panel">
+                <div class="traits-title">Team Traits</div>
+                <div id="traitsDisplay"></div>
+            </div>
+
+            <div class="right-column">
+                <div class="board-area">
+                    <div class="board">
+                        <div class="board-title">Battle Formation</div>
+                        <div>
+                            <div class="board-row-label">Front Line (4 units)</div>
+                            <div class="board-row" id="frontRow"></div>
+                        </div>
+                        <div>
+                            <div class="board-row-label">Back Line (9 units)</div>
+                            <div class="board-row" id="backRow"></div>
+                        </div>
+                        <button class="clear-board" onclick="clearBoard()">🗑️ Clear Board</button>
+                        
+                        <div class="stats-bar">
+                            <div class="stat-box">
+                                <div class="stat-label">Units</div>
+                                <div class="stat-value" id="unitCount">0/13</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-label">Active Traits</div>
+                                <div class="stat-value" id="activeTraits">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="units-pool">
+                    <div class="pool-title">Available Units (Click to select, drag to board)</div>
+                    <input type="text" id="unitSearch" class="pool-search" placeholder="Search by name or trait...">
+                    <div class="pool-units" id="unitsPool"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Unit data with positions
+        const allUnits = [
+            // 5-cost units
+            { name: "Welt", cost: 5, traits: ["Express Cohort", "Debuff"], position: "Frontline" },
+            { name: "Archer", cost: 5, traits: ["Galactic Voyager", "Skill Points", "Magician"], position: "Frontline" },
+            { name: "Topaz & Numby", cost: 5, traits: ["IPC", "Follow-up ATK"], position: "Backline" },
+            { name: "Jing Yuan", cost: 5, traits: ["Xianzhou", "AoE ATK"], position: "Frontline" },
+            { name: "Yunli", cost: 5, traits: ["Wolf Hunt", "Energy"], position: "Backline" },
+            { name: "Black Swan", cost: 5, traits: ["The Planet of Festivities", "DoT", "Destiny Diviner"], position: "Backline" },
+            { name: "Firefly", cost: 5, traits: ["Stellaron Hunters", "Break"], position: "Frontline" },
+            { name: "Cyrene", cost: 5, traits: ["Day Demigod", "Night Demigod", "Beloved One"], position: "Frontline" },
+            { name: "Bronya", cost: 5, traits: ["Supreme Guardian"], position: "Frontline" },
+            
+            // 4-cost units
+            { name: "Silver Wolf", cost: 4, traits: ["Stellaron Hunters", "Quantum Resonance"], position: "Both" },
+            { name: "Gepard", cost: 4, traits: ["Belobog", "Shield"], position: "Frontline" },
+            { name: "Luocha", cost: 4, traits: ["Galactic Voyager", "Heal"], position: "Backline" },
+            { name: "Fu Xuan", cost: 4, traits: ["Xianzhou", "Heal", "Quantum Resonance"], position: "Backline" },
+            { name: "Yanqing", cost: 4, traits: ["Xianzhou", "Wolf Hunt", "Debuff"], position: "Backline" },
+            { name: "Lingsha", cost: 4, traits: ["Wolf Hunt", "Break"], position: "Frontline" },
+            { name: "Robin", cost: 4, traits: ["The Planet of Festivities", "Follow-up ATK"], position: "Backline" },
+            { name: "Boothill", cost: 4, traits: ["Galaxy Ranger", "Break"], position: "Frontline" },
+            { name: "The Herta", cost: 4, traits: ["Cosmic Scholar", "AoE ATK"], position: "Frontline" },
+            { name: "Castorice", cost: 4, traits: ["Night Demigod", "Bloodflame"], position: "Frontline" },
+            { name: "Hysilens", cost: 4, traits: ["Day Demigod", "DoT"], position: "Frontline" },
+            { name: "Remembrance Trailblazer", cost: 4, traits: ["Express Cohort", "Energy"], position: "Frontline" },
+            
+            // 3-cost units
+            { name: "Himeko", cost: 3, traits: ["Express Cohort", "Break"], position: "Backline" },
+            { name: "Saber", cost: 3, traits: ["Galactic Voyager", "Energy"], position: "Both" },
+            { name: "Seele", cost: 3, traits: ["Belobog", "Quantum Resonance"], position: "Frontline" },
+            { name: "Natasha", cost: 3, traits: ["Belobog", "Heal"], position: "Backline" },
+            { name: "Jingliu", cost: 3, traits: ["Wolf Hunt", "Bloodflame"], position: "Backline" },
+            { name: "Fugue", cost: 3, traits: ["Xianzhou", "Break"], position: "Backline" },
+            { name: "Dr. Ratio", cost: 3, traits: ["Cosmic Scholar", "Galactic Voyager", "Follow-up ATK"], position: "Frontline" },
+            { name: "Acheron", cost: 3, traits: ["Galaxy Ranger", "Debuff"], position: "Frontline" },
+            { name: "Sunday", cost: 3, traits: ["Express Cohort", "The Planet of Festivities", "Energy"], position: "Frontline" },
+            { name: "Anaxa", cost: 3, traits: ["Day Demigod", "AoE ATK"], position: "Backline" },
+            { name: "Phainon", cost: 3, traits: ["Deliverer"], position: "Frontline" },
+            { name: "Cerydra", cost: 3, traits: ["Night Demigod", "Skill Points"], position: "Both" },
+            { name: "Evernight", cost: 3, traits: ["Night Demigod", "Bloodflame"], position: "Both" },
+            
+            // 2-cost units
+            { name: "Kafka", cost: 2, traits: ["Stellaron Hunters", "DoT"], position: "Frontline" },
+            { name: "Pela", cost: 2, traits: ["Belobog", "Debuff"], position: "Backline" },
+            { name: "Dan Heng IL", cost: 2, traits: ["Express Cohort", "Skill Points"], position: "Frontline" },
+            { name: "Huohuo", cost: 2, traits: ["Xianzhou", "Heal", "Energy"], position: "Both" },
+            { name: "Feixiao", cost: 2, traits: ["Wolf Hunt", "Follow-up ATK"], position: "Frontline" },
+            { name: "Argenti", cost: 2, traits: ["Galactic Voyager", "AoE ATK"], position: "Frontline" },
+            { name: "Ruan Mei", cost: 2, traits: ["Cosmic Scholar", "Break"], position: "Backline" },
+            { name: "Aventurine", cost: 2, traits: ["IPC", "Follow-up ATK", "Shield"], position: "Frontline" },
+            { name: "Sparkle", cost: 2, traits: ["The Planet of Festivities", "Quantum Resonance", "Skill Points"], position: "Backline" },
+            { name: "Tribbie", cost: 2, traits: ["Day Demigod", "AoE ATK"], position: "Both" },
+            { name: "Mydei", cost: 2, traits: ["Night Demigod", "Bloodflame"], position: "Both" },
+            { name: "Hyacine", cost: 2, traits: ["Day Demigod", "Heal", "Bloodflame"], position: "Frontline" },
+            { name: "Dan Heng PT", cost: 2, traits: ["Night Demigod", "Shield"], position: "Backline" },
+            
+            // 1-cost units
+            { name: "March 7th", cost: 1, traits: ["Express Cohort", "Shield"], position: "Backline" },
+            { name: "Asta", cost: 1, traits: ["Cosmic Scholar", "DoT"], position: "Frontline" },
+            { name: "Herta", cost: 1, traits: ["Cosmic Scholar", "AoE ATK"], position: "Both" },
+            { name: "Sampo", cost: 1, traits: ["Galactic Voyager", "Belobog", "DoT"], position: "Both" },
+            { name: "Qingque", cost: 1, traits: ["Xianzhou", "Skill Points"], position: "Frontline" },
+            { name: "Tingyun", cost: 1, traits: ["Xianzhou", "Energy"], position: "Backline" },
+            { name: "Blade", cost: 1, traits: ["Stellaron Hunters", "Bloodflame"], position: "Backline" },
+            { name: "Jiaoqiu", cost: 1, traits: ["Wolf Hunt", "Heal", "Debuff"], position: "Frontline" },
+            { name: "Moze", cost: 1, traits: ["Wolf Hunt", "Follow-up ATK"], position: "Backline" },
+            { name: "Gallagher", cost: 1, traits: ["The Planet of Festivities", "Break", "Heal"], position: "Both" },
+            { name: "Jade", cost: 1, traits: ["IPC", "AoE ATK"], position: "Backline" },
+            { name: "Rappa", cost: 1, traits: ["Galaxy Ranger", "Break"], position: "Frontline" },
+            { name: "Aglaea", cost: 1, traits: ["Day Demigod", "Energy"], position: "Frontline" },
+            { name: "Cipher", cost: 1, traits: ["Night Demigod", "Debuff", "Follow-up ATK"], position: "Frontline" }
+        ];
+
+        // Trait thresholds
+        const traitThresholds = {
+            "Xianzhou": [3, 5, 7, 10],
+            "Wolf Hunt": [3, 5, 7, 9],
+            "Night Demigod": [3, 5, 7, 9],
+            "Day Demigod": [3, 4, 6, 9],
+            "Belobog": [2, 4, 6],
+            "Express Cohort": [2, 4, 6],
+            "Cosmic Scholar": [2, 4, 6],
+            "Galactic Voyager": [1, 2, 3, 4, 5, 6, 7],
+            "The Planet of Festivities": [2, 3, 4, 5, 6],
+            "Stellaron Hunters": [2, 3, 4],
+            "Galaxy Ranger": [1, 2, 3],
+            "IPC": [2, 3],
+            "Break": [2, 4, 6, 8, 10],
+            "Follow-up ATK": [3, 5, 7, 9],
+            "Energy": [3, 5, 7, 10],
+            "AoE ATK": [3, 5, 7, 9],
+            "Bloodflame": [2, 4, 6, 8],
+            "Debuff": [2, 4, 6, 8],
+            "DoT": [2, 4, 6],
+            "Skill Points": [2, 4, 6],
+            "Quantum Resonance": [2, 3, 4, 5],
+            "Heal": [2, 4, 6],
+            "Shield": [2, 4],
+            "Supreme Guardian": [],
+            "Magician": [],
+            "Destiny Diviner": [],
+            "Beloved One": [],
+            "Deliverer": []
+        };
+
+        // Sort units by cost (1-5) then alphabetically
+        allUnits.sort((a, b) => {
+            if (a.cost !== b.cost) {
+                return a.cost - b.cost;
+            }
+            return a.name.localeCompare(b.name);
+        });
+
+        function getPositionIndicator(position) {
+            const frontFilled = position === "Frontline" || position === "Both";
+            const backFilled = position === "Backline" || position === "Both";
+            
+            return `
+                <div class="position-indicator">
+                    <div class="position-box ${frontFilled ? 'filled' : ''}"></div>
+                    <div class="position-box ${backFilled ? 'filled' : ''}"></div>
+                </div>
+            `;
+        }
+
+        let board = {
+            front: [null, null, null, null],
+            back: [null, null, null, null, null, null, null, null, null]
+        };
+
+        let draggedUnit = null;
+        let draggedFromTile = null; // Track if dragging from a board tile
+        let manualTraitAdjustments = {}; // Track manual +/- adjustments per trait
+
+        function initializeBoard() {
+            const frontRow = document.getElementById('frontRow');
+            const backRow = document.getElementById('backRow');
+
+            // Create front row tiles
+            for (let i = 0; i < 4; i++) {
+                const tile = createTile('front', i);
+                frontRow.appendChild(tile);
+            }
+
+            // Create back row tiles
+            for (let i = 0; i < 9; i++) {
+                const tile = createTile('back', i);
+                backRow.appendChild(tile);
+            }
+
+            renderUnitsPool();
+            updateTraitsDisplay();
+            updateStats();
+
+            // Add search functionality
+            document.getElementById('unitSearch').addEventListener('input', (e) => {
+                renderUnitsPool(e.target.value);
+            });
+        }
+
+        function createTile(row, index) {
+            const tile = document.createElement('div');
+            tile.className = 'board-tile';
+            tile.dataset.row = row;
+            tile.dataset.index = index;
+
+            tile.addEventListener('dragover', handleDragOver);
+            tile.addEventListener('drop', handleDrop);
+            tile.addEventListener('dragleave', handleDragLeave);
+            tile.addEventListener('click', () => {
+                if (draggedUnit && !draggedFromTile) {
+                    if (!board[row][index]) {
+                        placeUnit(row, index, draggedUnit);
+                        draggedUnit = null;
+                        renderUnitsPool();
+                    }
+                }
+            });
+
+            return tile;
+        }
+
+        function renderUnitsPool(searchTerm = null) {
+            // If no search term provided, get it from the input field
+            if (searchTerm === null) {
+                searchTerm = document.getElementById('unitSearch').value;
+            }
+            
+            const pool = document.getElementById('unitsPool');
+            pool.innerHTML = '';
+
+            const usedUnits = [...board.front, ...board.back].filter(u => u !== null).map(u => u.name);
+
+            // Filter units based on search
+            const filteredUnits = allUnits.filter(unit => {
+                if (!searchTerm) return true;
+                const search = searchTerm.toLowerCase();
+                return unit.name.toLowerCase().includes(search) ||
+                       unit.traits.some(trait => trait.toLowerCase().includes(search));
+            });
+
+            filteredUnits.forEach(unit => {
+                const card = document.createElement('div');
+                card.className = 'unit-card';
+                
+                if (usedUnits.includes(unit.name)) {
+                    card.classList.add('used');
+                } else {
+                    card.draggable = true;
+                    card.addEventListener('dragstart', (e) => handleDragStart(e, unit, null));
+                    card.addEventListener('dragend', handleDragEnd);
+                    card.addEventListener('click', () => {
+                        draggedUnit = unit;
+                        draggedFromTile = null;
+                        document.querySelectorAll('.unit-card').forEach(c => c.style.border = 'none');
+                        card.style.border = '3px solid #ffd700';
+                    });
+                }
+
+                card.innerHTML = `
+                    <div class="unit-name">
+                        ${getPositionIndicator(unit.position)}
+                        <span>${unit.name}</span>
+                    </div>
+                    <div class="unit-cost">💰 ${unit.cost}</div>
+                    <div class="unit-traits">${unit.traits.join(', ')}</div>
+                `;
+
+                pool.appendChild(card);
+            });
+        }
+
+        function handleDragStart(e, unit, fromTile) {
+            draggedUnit = unit;
+            draggedFromTile = fromTile;
+            e.target.classList.add('dragging');
+            if (fromTile) {
+                e.dataTransfer.effectAllowed = 'move';
+            }
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const tile = e.currentTarget;
+            tile.classList.remove('drag-over');
+
+            const row = tile.dataset.row;
+            const index = parseInt(tile.dataset.index);
+
+            if (draggedUnit) {
+                // If dragging from another tile (rearranging)
+                if (draggedFromTile) {
+                    const fromRow = draggedFromTile.row;
+                    const fromIndex = draggedFromTile.index;
+                    
+                    // Swap units or move to empty tile
+                    const targetUnit = board[row][index];
+                    board[row][index] = draggedUnit;
+                    board[fromRow][fromIndex] = targetUnit;
+                    
+                    renderTile(row, index);
+                    renderTile(fromRow, fromIndex);
+                } else {
+                    // Dragging from unit pool
+                    if (!board[row][index]) {
+                        placeUnit(row, index, draggedUnit);
+                    }
+                }
+                
+                draggedUnit = null;
+                draggedFromTile = null;
+                renderUnitsPool();
+            }
+        }
+
+        function placeUnit(row, index, unit) {
+            board[row][index] = unit;
+            renderTile(row, index);
+            updateTraitsDisplay();
+            updateStats();
+        }
+
+        function renderTile(row, index) {
+            const tiles = document.querySelectorAll(`.board-tile[data-row="${row}"][data-index="${index}"]`);
+            const tile = tiles[0];
+
+            if (board[row][index]) {
+                const unit = board[row][index];
+                tile.classList.add('occupied');
+                tile.draggable = true;
+                
+                // Add drag handlers for rearranging
+                tile.addEventListener('dragstart', (e) => {
+                    handleDragStart(e, unit, { row, index });
+                });
+                tile.addEventListener('dragend', handleDragEnd);
+                
+                tile.innerHTML = `
+                    <div class="tile-unit">${unit.name}</div>
+                    <div class="tile-cost">${unit.cost}</div>
+                    <button class="remove-tile" onclick="removeUnit('${row}', ${index})">×</button>
+                `;
+            } else {
+                tile.classList.remove('occupied');
+                tile.draggable = false;
+                tile.innerHTML = '';
+            }
+        }
+
+        function removeUnit(row, index) {
+            board[row][index] = null;
+            renderTile(row, index);
+            updateTraitsDisplay();
+            updateStats();
+            renderUnitsPool();
+        }
+
+        function clearBoard() {
+            board = {
+                front: [null, null, null, null],
+                back: [null, null, null, null, null, null, null, null, null]
+            };
+
+            manualTraitAdjustments = {}; // Reset manual adjustments
+
+            document.querySelectorAll('.board-tile').forEach(tile => {
+                tile.classList.remove('occupied');
+                tile.draggable = false;
+                tile.innerHTML = '';
+            });
+
+            document.getElementById('unitSearch').value = '';
+            updateTraitsDisplay();
+            updateStats();
+            renderUnitsPool();
+        }
+
+        function updateTraitsDisplay() {
+            const allBoardUnits = [...board.front, ...board.back].filter(u => u !== null);
+            const traitCounts = {};
+
+            allBoardUnits.forEach(unit => {
+                unit.traits.forEach(trait => {
+                    traitCounts[trait] = (traitCounts[trait] || 0) + 1;
+                });
+            });
+
+            const display = document.getElementById('traitsDisplay');
+            display.innerHTML = '';
+
+            if (Object.keys(traitCounts).length === 0) {
+                display.innerHTML = '<div style="color: #999; text-align: center; padding: 20px; font-size: 0.9em;">No units on board</div>';
+                return;
+            }
+
+            // Sort traits: unique traits first, then active traits, then inactive, then by count
+            const sortedTraits = Object.entries(traitCounts).sort((a, b) => {
+                const [traitA, countA] = a;
+                const [traitB, countB] = b;
+                const thresholdsA = traitThresholds[traitA] || [];
+                const thresholdsB = traitThresholds[traitB] || [];
+                
+                // Apply manual adjustments for sorting
+                const adjustedCountA = countA + (manualTraitAdjustments[traitA] || 0);
+                const adjustedCountB = countB + (manualTraitAdjustments[traitB] || 0);
+                
+                // Check if traits are unique (no thresholds)
+                const isUniqueA = thresholdsA.length === 0;
+                const isUniqueB = thresholdsB.length === 0;
+                
+                // Unique traits always come first
+                if (isUniqueA && !isUniqueB) return -1;
+                if (!isUniqueA && isUniqueB) return 1;
+                
+                // If both are unique, sort by count
+                if (isUniqueA && isUniqueB) {
+                    return adjustedCountB - adjustedCountA;
+                }
+                
+                // Check if non-unique traits are active
+                const isActiveA = thresholdsA.some(t => adjustedCountA >= t);
+                const isActiveB = thresholdsB.some(t => adjustedCountB >= t);
+                
+                // Active non-unique traits come before inactive
+                if (isActiveA && !isActiveB) return -1;
+                if (!isActiveA && isActiveB) return 1;
+                
+                // Among same status (both active or both inactive), sort by count (descending)
+                return adjustedCountB - adjustedCountA;
+            });
+
+            sortedTraits.forEach(([trait, baseCount]) => {
+                const thresholds = traitThresholds[trait] || [];
+                const manualAdjust = manualTraitAdjustments[trait] || 0;
+                const count = baseCount + manualAdjust;
+                
+                // Determine active interval level
+                let activeLevel = 0;
+                if (thresholds.length === 0) {
+                    activeLevel = 1; // Unique traits
+                } else if (trait === "Galactic Voyager") {
+                    // Special handling for Galactic Voyager (1/2/3/4/5/6/7)
+                    if (count >= 7) activeLevel = 4;
+                    else if (count >= 5) activeLevel = 3;
+                    else if (count >= 3) activeLevel = 2;
+                    else if (count >= 1) activeLevel = 1;
+                } else {
+                    // Count how many thresholds are met
+                    const metThresholds = thresholds.filter(t => count >= t).length;
+                    if (metThresholds >= 4) activeLevel = 4;
+                    else if (metThresholds >= 3) activeLevel = 3;
+                    else if (metThresholds >= 2) activeLevel = 2;
+                    else if (metThresholds >= 1) activeLevel = 1;
+                }
+
+                let progressText = '';
+                if (thresholds.length === 0) {
+                    progressText = 'Unique';
+                } else {
+                    progressText = thresholds.join(' / ');
+                }
+
+                // Get units with this trait
+                const unitsWithTrait = allUnits.filter(unit => unit.traits.includes(trait));
+                const unitsHTML = unitsWithTrait.map(unit => 
+                    `<span class="trait-tooltip-unit">${unit.name} (${unit.cost}⭐)</span>`
+                ).join('');
+
+                const description = traitDescriptions[trait] || "This trait provides special bonuses to units.";
+                
+                const div = document.createElement('div');
+                div.className = 'trait-item';
+                if (activeLevel > 0) {
+                    div.classList.add(`active-${activeLevel}`);
+                }
+                
+                div.innerHTML = `
+                    <div class="trait-controls" onclick="event.stopPropagation()">
+                        ${manualAdjust > 0 ? `<span class="trait-manual-count">+${manualAdjust}</span>` : ''}
+                        <button class="trait-adjust-btn" onclick="adjustTrait('${trait}', 1)">▲</button>
+                        <button class="trait-adjust-btn" onclick="adjustTrait('${trait}', -1)">▼</button>
+                    </div>
+                    <div class="trait-name">${trait}</div>
+                    <div class="trait-progress">
+                        <div class="trait-count">${count}</div>
+                        <div class="trait-thresholds">${progressText}</div>
+                    </div>
+                    <div class="trait-tooltip">
+                        <div class="trait-tooltip-title">${trait}</div>
+                        <div class="trait-tooltip-description">${description}</div>
+                        <div class="trait-tooltip-units-title">Units with this trait:</div>
+                        <div class="trait-tooltip-units">${unitsHTML}</div>
+                    </div>
+                `;
+                display.appendChild(div);
+            });
+        }
+
+        function adjustTrait(traitName, delta) {
+            if (!manualTraitAdjustments[traitName]) {
+                manualTraitAdjustments[traitName] = 0;
+            }
+            
+            manualTraitAdjustments[traitName] += delta;
+            
+            // Don't allow negative adjustments below 0
+            if (manualTraitAdjustments[traitName] < 0) {
+                manualTraitAdjustments[traitName] = 0;
+            }
+            
+            // Clean up if back to 0
+            if (manualTraitAdjustments[traitName] === 0) {
+                delete manualTraitAdjustments[traitName];
+            }
+            
+            updateTraitsDisplay();
+            updateStats();
+        }
+
+        function updateStats() {
+            const allBoardUnits = [...board.front, ...board.back].filter(u => u !== null);
+            
+            document.getElementById('unitCount').textContent = `${allBoardUnits.length}/13`;
+
+            const traitCounts = {};
+            allBoardUnits.forEach(unit => {
+                unit.traits.forEach(trait => {
+                    traitCounts[trait] = (traitCounts[trait] || 0) + 1;
+                });
+            });
+
+            let activeTraitsCount = 0;
+            Object.entries(traitCounts).forEach(([trait, baseCount]) => {
+                const count = baseCount + (manualTraitAdjustments[trait] || 0);
+                const thresholds = traitThresholds[trait] || [];
+                if (thresholds.length === 0) {
+                    activeTraitsCount++; // Unique traits are always active
+                } else if (thresholds.filter(t => count >= t).length > 0) {
+                    activeTraitsCount++;
+                }
+            });
+
+            document.getElementById('activeTraits').textContent = activeTraitsCount;
+        }
+
+        // Initialize the board on load
+        initializeBoard();
+
+        // Trait descriptions
+        const traitDescriptions = {
+            "Xianzhou": "",
+            "Wolf Hunt": "",
+            "Night Demigod": "",
+            "Day Demigod": "",
+            "Belobog": "",
+            "Express Cohort": "",
+            "Cosmic Scholar": "",
+            "Galactic Voyager": "",
+            "The Planet of Festivities": "",
+            "Stellaron Hunters": "",
+            "Galaxy Ranger": "",
+            "IPC": "",
+            "Break": "",
+            "Follow-up ATK": "",
+            "Energy": "",
+            "AoE ATK": "",
+            "Bloodflame": "",
+            "Debuff": "",
+            "DoT": "",
+            "Skill Points": "",
+            "Quantum Resonance": "",
+            "Heal": "",
+            "Shield": "",
+            "Supreme Guardian": "",
+            "Magician": "",
+            "Destiny Diviner": "",
+            "Beloved One": "",
+            "Deliverer": ""
+        };
+    </script>
+
+<div id="globalTooltipContainer"></div>
+<script>
+const globalTooltipContainer=document.getElementById("globalTooltipContainer");
+let activeTooltipEl=null;
+function attachTraitTooltipHandlers(){
+ document.querySelectorAll('.trait-item').forEach(item=>{
+   const tooltipContent=item.querySelector('.trait-tooltip');
+   if(!tooltipContent)return;
+   tooltipContent.style.display='none';
+   item.addEventListener('mouseenter',()=>{
+     const rect=item.getBoundingClientRect();
+     const tip=document.createElement('div');
+     tip.className='global-tooltip';
+     tip.innerHTML=tooltipContent.innerHTML;
+     globalTooltipContainer.appendChild(tip);
+     activeTooltipEl=tip;
+     tip.style.left=(rect.right+15)+'px';
+     tip.style.top=rect.top+'px';
+     requestAnimationFrame(()=>tip.style.opacity=1);
+   });
+   item.addEventListener('mouseleave',()=>{
+     if(activeTooltipEl){activeTooltipEl.remove();activeTooltipEl=null;}
+   });
+ });
+}
+const originalUpdateTraitsDisplay=updateTraitsDisplay;
+updateTraitsDisplay=function(){originalUpdateTraitsDisplay();attachTraitTooltipHandlers();}
+</script>
+
+</body>
+</html>
