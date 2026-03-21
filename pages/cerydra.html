@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cerydra - Character Details</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b0d1a;
+      color: #e0e0f0;
+      display: flex;
+      min-height: 100vh;
+    }
+    .main {
+      margin-left: 0px;
+      flex: 1;
+      padding: 32px 36px;
+      max-width: 1400px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #14163a;
+      color: #a0a0c0;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 28px;
+      text-decoration: none;
+    }
+    .back-btn:hover { border-color: #6a5acd; color: #e0e0f0; }
+
+    .wiki-top {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .left-col { display: flex; flex-direction: column; gap: 20px; }
+
+    .char-portrait {
+      width: 280px;
+      aspect-ratio: 1 / 1.15;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(160deg, #2a1a4a 0%, #1a1040 50%, #301a50 100%);
+    }
+    .char-portrait img { width: 100%; height: 100%; object-fit: cover; }
+
+    .info-box {
+      background: #12142e;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .info-box-header {
+      background: linear-gradient(135deg, #1e1a45, #2a2060);
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #c0c0f0;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: #8888aa; font-weight: 500; }
+    .info-value {
+      color: #d0d0f0;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .info-value img { width: 20px; height: 20px; border-radius: 4px; }
+    .stars { color: #f0c040; letter-spacing: 1px; }
+
+    .right-col { display: flex; flex-direction: column; }
+
+    .char-name-block { margin-bottom: 8px; }
+    .char-name-block h1 {
+      font-size: 36px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .char-name-block .subtitle {
+      font-size: 14px;
+      color: #8888aa;
+      font-style: italic;
+    }
+    .char-stars-lg {
+      font-size: 20px;
+      color: #f0c040;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+
+    .description-box {
+      background: #12142e;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 24px;
+      flex: 1;
+    }
+    .description-box h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #c0b0f0;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .description-box p {
+      font-size: 14px;
+      line-height: 1.75;
+      color: #b0b0d0;
+    }
+    .description-box p + p { margin-top: 12px; }
+
+    .wiki-sections {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .wiki-section-full { margin-bottom: 20px; }
+
+    .section-card {
+      background: #12142e;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .section-card:hover { border-color: rgba(106,90,205,0.3); }
+
+    .section-header {
+      background: linear-gradient(135deg, #1e1a45, #2a2060);
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #c0c0f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header .icon {
+      width: 20px; height: 20px;
+      border-radius: 6px;
+      background: rgba(106,90,205,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+    }
+    .section-body { padding: 20px; }
+    .section-body p {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #a0a0c0;
+    }
+    .section-body h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #d0c8f0;
+      margin-bottom: 8px;
+    }
+
+    .trace-list { list-style: none; }
+    .trace-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px;
+      color: #a0a0c0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .trace-list li:last-child { border-bottom: none; }
+    .trace-val { color: #d0c8f0; font-weight: 500; }
+
+    .stat-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #8888aa;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+    .stat-section-label:first-child { margin-top: 0; }
+
+    /* Stat toggle */
+    .stat-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .stat-toggle-btn {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      border-radius: 11px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: #1a1d45;
+      cursor: pointer;
+      transition: background 0.25s, border-color 0.25s;
+      flex-shrink: 0;
+    }
+    .stat-toggle-btn.active {
+      background: linear-gradient(135deg, #3b2f7a, #5a3fa0);
+      border-color: #6a5acd;
+    }
+    .stat-toggle-btn::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #a0a0c0;
+      transition: transform 0.25s, background 0.25s;
+    }
+    .stat-toggle-btn.active::after {
+      transform: translateX(18px);
+      background: #fff;
+    }
+    .stat-toggle-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #a0a0c0;
+      transition: color 0.25s;
+      user-select: none;
+    }
+    .stat-toggle-label.active-label { color: #d0c8f0; }
+
+    .stat-panel {
+      position: relative;
+    }
+    .stat-table {
+      transition: opacity 0.3s ease;
+    }
+    .stat-table.hidden {
+      display: none;
+    }
+    .stat-table.fading-out {
+      opacity: 0;
+    }
+    .stat-table.fading-in {
+      opacity: 0;
+    }
+
+    .rec-entry { margin-bottom: 16px; }
+    .rec-entry:last-child { margin-bottom: 0; }
+    .rec-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #d0c8f0;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rec-tag {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(106,90,205,0.2);
+      color: #a090d0;
+    }
+    .rec-tag.bis {
+      background: rgba(240,192,64,0.15);
+      color: #f0c040;
+    }
+    .rec-desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #9090b0;
+    }
+
+    .priority-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .priority-item:last-child { border-bottom: none; }
+    .priority-rank {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .priority-rank.rank-1 { background: rgba(240,192,64,0.2); color: #f0c040; }
+    .priority-rank.rank-2 { background: rgba(192,192,210,0.15); color: #c0c0d2; }
+    .priority-rank.rank-3 { background: rgba(180,130,80,0.15); color: #b4824f; }
+    .priority-rank.rank-4 { background: rgba(140,140,170,0.1); color: #8c8caa; }
+
+    .priority-info { flex: 1; }
+    .priority-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #d0c8f0;
+    }
+    .priority-note {
+      font-size: 12px;
+      color: #8888aa;
+      margin-top: 2px;
+    }
+
+    .team-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .team-row:last-child { margin-bottom: 0; }
+    .team-block {
+      flex: 1;
+      min-width: 280px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .team-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #8888aa;
+      margin-bottom: 12px;
+    }
+    .team-slots { display: flex; gap: 12px; }
+    .team-slot { flex: 1; text-align: center; }
+    .team-slot-icon {
+      width: 56px; height: 56px;
+      border-radius: 12px;
+      margin: 0 auto 6px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      background: #1a1d45;
+    }
+    .team-slot-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .team-slot-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: #d0c8f0;
+    }
+    .team-slot-role {
+      font-size: 10px;
+      color: #7a7ca0;
+      margin-top: 1px;
+    }
+    .team-note {
+      font-size: 12px;
+      color: #8888aa;
+      margin-top: 12px;
+      line-height: 1.5;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .invest-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .invest-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .invest-card-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #8888aa;
+      margin-bottom: 8px;
+    }
+    .invest-card-value {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .invest-card-note {
+      font-size: 11px;
+      color: #7a7ca0;
+    }
+    .grade-s { color: #f0c040; }
+    .grade-a { color: #60d080; }
+    .grade-b { color: #60a0e0; }
+
+    .invest-summary {
+      padding: 16px;
+      background: rgba(106,90,205,0.06);
+      border: 1px solid rgba(106,90,205,0.12);
+      border-radius: 10px;
+    }
+    .invest-summary h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #c0b0f0;
+      margin-bottom: 8px;
+    }
+    .invest-summary p {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #a0a0c0;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #2a2d5a; border-radius: 3px; }
+
+    @media (max-width: 1000px) {
+      .wiki-top { grid-template-columns: 1fr; }
+      .char-portrait { width: 220px; }
+      .wiki-sections { grid-template-columns: 1fr; }
+      .invest-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .main { padding: 16px; }
+      .char-portrait { width: 180px; }
+      .invest-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main">
+    <a href="https://akaerya.github.io/" class="back-btn">← Back to Characters</a>
+
+    <!-- Top: Portrait + Stats | Description -->
+    <div class="wiki-top">
+      <div class="left-col">
+        <div class="char-portrait">
+          <img src="/images/character/cerydra.webp" alt="Cerydra">
+        </div>
+        <div class="info-box">
+          <div class="info-box-header">Character Info</div>
+          <div class="info-row">
+            <span class="info-label">Rarity</span>
+            <span class="info-value stars">★★★★★</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Path</span>
+            <span class="info-value">
+              <img src="/images/elation.webp" alt="Elation"> Harmony
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Element</span>
+            <span class="info-value">
+              <img src="/images/physical.webp" alt="Physical"> Wind
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Faction</span>
+            <span class="info-value">Chryos Heir</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">World</span>
+            <span class="info-value">Amphoreus</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="char-name-block">
+          <h1>Cerydra</h1>
+          <div class="subtitle">"'Flamebearer,' 'Tyrant,' 'Empress,' 'Supreme Commander,' 'Imperator'... The world has given me countless titles, but you may simply call me by my true name — Cerydra."</div>
+        </div>
+        <div class="char-stars-lg">★★★★★</div>
+        <div class="description-box">
+          <h3>Description</h3>
+          <!-- Just add another <p></p> if you need another paragraph -->
+          <p>"Recommended stats assume 4 ATK main stats (body, boots, orb, rope). You can aim for a higher SPD or ERR rope build to increase Cerydra's charge rate, but its value is conditional and better suited for Anaxa teams.</p>
+          <p>For Phainon teams, Cerydra should be faster than Phainon/Sunday. It is less of a need for Anaxa teams, but it can make the SP consumption of the rotation more comfortable.</p>
+          <p>If you are using an advancer with Cerydra like Sunday or Bronya, you can either increase your advancer's speed by 20 or decrease your DPS' speed by 20 and use ATK boots instead.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row: Recommended Stats | Recommended LC/Relic | Trace Priority -->
+    <div class="wiki-sections">
+
+      <!-- Recommended Stats -->
+      <!-- Edit the EM DASHES, delete any stats you DON'T NEED -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="icon">✦</span> Recommended Stats (in combat)
+        </div>
+        <div class="section-body">
+          <div class="stat-toggle-wrap">
+            <div class="stat-toggle-btn" id="statToggle" onclick="toggleStats()"></div>
+            <span class="stat-toggle-label active-label" id="statToggleLabel">E0S0</span>
+          </div>
+
+          <div class="stat-panel" id="statPanel">
+            <!-- E0S0 table (default, visible) -->
+            <div class="stat-table" id="statsE0S0">
+              <div class="stat-section-label"><b>E0S0 (The Forever Victual)</b></div>
+              <ul class="trace-list">
+                <li><span>HP</span> <span class="trace-val">—</span></li>
+                <li><span>ATK</span> <span class="trace-val">4600</span></li>
+                <li><span>CRIT Rate</span> <span class="trace-val">—</span></li>
+                <li><span>CRIT DMG</span> <span class="trace-val">—</span></li>
+                <li><span>SPD</span> <span class="trace-val">133.34+</span></li>
+                <li><span>Energy Regeneration Rate</span> <span class="trace-val">100% - 119.4%</span></li>
+                <li><span>Effect Hit Rate</span> <span class="trace-val">—</span></li>
+                <li><span>Break Effect</span> <span class="trace-val">—</span></li>
+                <li><span>Elemental Damage</span> <span class="trace-val">—</span></li>
+              </ul>
+            </div>
+
+            <!-- E0S1 / E6S5 table (hidden) -->
+            <div class="stat-table hidden" id="statsE0S1">
+              <div class="stat-section-label"><b>5* E0S1</b></div>
+              <ul class="trace-list">
+                <li><span>HP</span> <span class="trace-val">—</span></li>
+                <li><span>ATK</span> <span class="trace-val">5000</span></li>
+                <li><span>CRIT Rate</span> <span class="trace-val">—</span></li>
+                <li><span>CRIT DMG</span> <span class="trace-val">—</span></li>
+                <li><span>SPD</span> <span class="trace-val">133.34+</span></li>
+                <li><span>Energy Regeneration Rate</span> <span class="trace-val">100% - 119.4%</span></li>
+                <li><span>Effect Hit Rate</span> <span class="trace-val">—</span></li>
+                <li><span>Break Effect</span> <span class="trace-val">—</span></li>
+                <li><span>Elemental Damage</span> <span class="trace-val">—</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="stat-section-label"><b>Mainstat/Substat Priority</b></div>
+		  <div class="rec-desc">Body ATK : Boots ATK/SPD : Orb ATK : Rope ATK/ERR</div>
+          <div class="rec-desc">SPD (until breakpoint) > ATK% > Crit DMG</div>
+        </div>
+      </div>
+
+      <!-- Recommended Light Cones / Relic Sets -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="icon">◈</span> Recommended Light Cones / Relic Sets
+        </div>
+        <div class="section-body">
+          <h4>Light Cones</h4>
+          <div class="rec-entry">
+            <div class="rec-name">Epoch Etched in Golden Blood <span class="rec-tag bis">BiS</span></div>
+            <div class="rec-desc">Provides everything Cerydra requires as a buffer for a specific niche of DPS carries. Provides ATK% to further boost Military Merit, restores skill points when dealing Ultimate DMG, and improves the Skill DMG of her allied targets.</div>
+          </div>
+          <div class="rec-entry">
+            <div class="rec-name">The Forever Victual <span class="rec-tag">Budget</span></div>
+            <div class="rec-desc">Free light cone that provides her with a decent ATK bonus provided that she is able to stack all three stacks (she starts combat with 1 from her technique and requires 2 skill uses to fully max this bonus).</div>
+          </div>
+          <div class="rec-entry">
+            <div class="rec-name">Dance! Dance! Dance! <span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">Generally not recommended due to the low ATK this cone provides and how infrequent Cerydra usually casts her ultimate. This can provide another turn if you meet the damage threshold requirement of the fight without needing a specialized option.</div>
+          </div>
+
+          <h4 style="margin-top:20px;">Relic Sets</h4>
+          <div class="rec-entry">
+            <div class="rec-name">Sacerdos' Relived Ordeal <span class="rec-tag bis">BiS</span></div>
+            <div class="rec-desc">She is able to stack and maintain the 4pc bonus with her skill. This is the best support set to further boost CRIT-based unit's DPS.</div>
+          </div>
+          <div class="rec-entry">
+            <div class="rec-name">Any variation of 2pc ATK%/2pc SPD% sets<span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">This is mainly to help hit SPD breakpoints if you cannot hit it with Sacerdos.</div>
+          </div>
+		  <div class="rec-entry">
+            <div class="rec-name">Eagle of Twilight Lane <span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">The use of this is usually in conjunction with DDD to get more turns in order to spam the skill and get your ultimate back faster. However, this is very SP heavy and not recommended in most teams because it lacks support bonuses and can cause your team to miss out on critical damage breakpoints.</div>
+          </div>
+
+          <h4 style="margin-top:20px;">Planar Ornaments</h4>
+          <div class="rec-entry">
+            <div class="rec-name">Lushaka, the Sunken Seas <span class="rec-tag bis">BiS</span></div>
+            <div class="rec-desc">As expected of her hyper-carry supporting kit, Lushaka is the best planar to use as it provides a bonus to a singular target while also providing energy regeneration to Cerydra.</div>
+          </div>
+		  <div class="rec-entry">
+            <div class="rec-name">Penacony, the Land of Dreams <span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">This should only be used with Anaxa and if you already pieces laying around, otherwise don't waste your time with farming or using fragments for this set and use Lushaka instead.</div>
+          </div>
+		  <div class="rec-entry">
+            <div class="rec-name">Broken Keel <span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">Provides a Crit DMG bonus to all allies provided she also has 30% Effect Res. Do not use this set if you don't hit or are sacrificing substats to hit the Effect Res requirement.</div>
+          </div>
+		  <div class="rec-entry">
+            <div class="rec-name">Fleet of the Ageless <span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">Lushaka-lite, it gives the entire team an ATK% boost but it lacks the energy regeneration and it also provides less of a boost than simply using Lushaka.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trace Priority -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="icon"></span> Trace Priority
+        </div>
+        <div class="section-body">
+          <h4>Character Traces</h4>
+          <div class="priority-item">
+            <div class="priority-rank rank-1">1</div>
+            <div class="priority-info">
+              <div class="priority-name">Talent — Ave Imperator</div>
+              <div class="priority-note">While Pawn's Promotion seems like the better trace to max first, you only get Pawn's Promotion bonuses on the attack that triggers the duplication. The Talent's ATK bonus is active throughout the fight and doesn't require saving and conserving the big attack for when Military Merit hits 6 charges.</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-rank rank-2">2</div>
+            <div class="priority-info">
+              <div class="priority-name">Skill — Pawn's Promotion</div>
+              <div class="priority-note">This trace is the next to max as it buffs the skill of the ally, which is what you want compared to the basic attack and ultimate.</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-rank rank-3">3</div>
+            <div class="priority-info">
+              <div class="priority-name">Ultimate — Scholar's Mate</div>
+              <div class="priority-note">Does more damage than the basic attack and you don't really spam the basic attack as you spam the skill instead.</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-rank rank-4">4</div>
+            <div class="priority-info">
+              <div class="priority-name">Basic ATK — King's Castling</div>
+              <div class="priority-note">Stop basic attacking.</div>
+            </div>
+          </div>
+<!-- nothing here needed for Cerydra
+          <h4 style="margin-top:20px;">Memosprite & Elation</h4>
+          <div class="priority-item">
+            <div class="priority-rank rank-1">1</div>
+            <div class="priority-info">
+              <div class="priority-name">Memosprite Skill</div>
+              <div class="priority-note">placeholder, delete.</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-rank rank-2">2</div>
+            <div class="priority-info">
+              <div class="priority-name">Memosprite Talent</div>
+              <div class="priority-note">placeholder, delete..</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-rank rank-3">3</div>
+            <div class="priority-info">
+              <div class="priority-name">Elation Skill</div>
+              <div class="priority-note">elation skill goes here</div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Suggestions -->
+    <div class="wiki-section-full">
+      <div class="section-card">
+        <div class="section-header">
+          <span class="icon"></span> Team Suggestions
+        </div>
+        <div class="section-body">
+          <div class="team-row">
+            <div class="team-block">
+              <div class="team-label">Hypercarry</div>
+              <div class="team-slots">
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/2a1a4a/fff?text=Eva" alt="Evanescia"></div>
+                  <div class="team-slot-name">Phainon</div>
+                  <div class="team-slot-role">DPS</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/1a2a4a/fff?text=Har" alt="Placeholder"></div>
+                  <div class="team-slot-name">Cerydra</div>
+                  <div class="team-slot-role">Harmony</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/1a2a4a/fff?text=Har" alt="Placeholder"></div>
+                  <div class="team-slot-name">Sunday</div>
+                  <div class="team-slot-role">Harmony</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/1a3a2a/fff?text=Sus" alt="Placeholder"></div>
+                  <div class="team-slot-name">Sparkle</div>
+                  <div class="team-slot-role">Harmony</div>
+                </div>
+              </div>
+              <div class="team-note">The turn order of this team should be Cerydra > Sparkle > Sunday for maximizing buffs.</div>
+            </div>
+            <div class="team-block">
+              <div class="team-label">Team 2</div>
+              <div class="team-slots">
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/2a1a4a/fff?text=Eva" alt="Evanescia"></div>
+                  <div class="team-slot-name">Anaxa</div>
+                  <div class="team-slot-role">DPS</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/2a1a4a/fff?text=Sub" alt="Placeholder"></div>
+                  <div class="team-slot-name">Cerydra</div>
+                  <div class="team-slot-role">Harmony</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/1a2a4a/fff?text=Har" alt="Placeholder"></div>
+                  <div class="team-slot-name">Cyrene</div>
+                  <div class="team-slot-role">Remembrance</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/1a3a2a/fff?text=Sus" alt="Placeholder"></div>
+                  <div class="team-slot-name">Trailblazer - Remembrance</div>
+                  <div class="team-slot-role">Remembrance</div>
+                </div>
+              </div>
+              <div class="team-note">This abuses the fact that Anaxa can throw out multiple skill uses by himself, and then we multiply it with Cerydra's mechanic, then we abuse Cyrene's Ode to Reason. All the while, RMC gets charges for Mem with the amount of energy that is being regenerated by Anaxa to continually advance him so he can throw more skills out and the cycle restarts.</div>
+            </div>
+          </div>
+          <div class="team-row">
+            <div class="team-block">
+              <div class="team-label">Budget / F2P</div>
+              <div class="team-slots">
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/2a1a4a/fff?text=Eva" alt="Evanescia"></div>
+                  <div class="team-slot-name">Evanescia</div>
+                  <div class="team-slot-role">DPS</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/1a2a4a/fff?text=Har" alt="Placeholder"></div>
+                  <div class="team-slot-name">Placeholder</div>
+                  <div class="team-slot-role">Harmony</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/3a2a1a/fff?text=Flex" alt="Placeholder"></div>
+                  <div class="team-slot-name">Placeholder</div>
+                  <div class="team-slot-role">Harmony</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/1a3a2a/fff?text=Sus" alt="Placeholder"></div>
+                  <div class="team-slot-name">Placeholder</div>
+                  <div class="team-slot-role">Natasha</div>
+                </div>
+              </div>
+              <div class="team-note">natasha is a class i know</div>
+            </div>
+            <div class="team-block">
+              <div class="team-label">team 4</div>
+              <div class="team-slots">
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/2a1a4a/fff?text=Eva" alt="Evanescia"></div>
+                  <div class="team-slot-name">Evanescia</div>
+                  <div class="team-slot-role">DPS</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/2a1a4a/fff?text=AoE" alt="Placeholder"></div>
+                  <div class="team-slot-name">Placeholder</div>
+                  <div class="team-slot-role">rabbits balls</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/1a2a4a/fff?text=Har" alt="Placeholder"></div>
+                  <div class="team-slot-name">Placeholder</div>
+                  <div class="team-slot-role">Harmony</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="https://via.placeholder.com/56x56/1a3a2a/fff?text=Sus" alt="Placeholder"></div>
+                  <div class="team-slot-name">Placeholder</div>
+                  <div class="team-slot-role">Sustain</div>
+                </div>
+              </div>
+              <div class="team-note">i give up</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vertical Investment Analysis -->
+    <div class="wiki-section-full">
+      <div class="section-card">
+        <div class="section-header">
+          <span class="icon"></span> Vertical Investment Analysis
+        </div>
+        <div class="section-body">
+          <div class="invest-grid">
+            <div class="invest-card">
+              <div class="invest-card-label">E0S0 Ceiling</div>
+              <div class="invest-card-value grade-a">F-</div>
+              <div class="invest-card-note">weak or strong</div>
+            </div>
+            <div class="invest-card">
+              <div class="invest-card-label">E0S1</div>
+              <div class="invest-card-value grade-s">SSSSS</div>
+              <div class="invest-card-note">wow nice you got money</div>
+            </div>
+            <div class="invest-card">
+              <div class="invest-card-label">E2S1</div>
+              <div class="invest-card-value grade-s">SSSSSSSS</div>
+              <div class="invest-card-note">can i haz some of that money</div>
+            </div>
+            <div class="invest-card">
+              <div class="invest-card-label">E6S1 Ceiling</div>
+              <div class="invest-card-value grade-s">Super Sexy Stuff+</div>
+              <div class="invest-card-note">meowwhale</div>
+            </div>
+          </div>
+
+          <div class="invest-summary">
+            <h4>Investment Recommendation</h4>
+            <p>ur poor</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let showingE0S1 = false;
+
+    function toggleStats() {
+      const toggle = document.getElementById('statToggle');
+      const label = document.getElementById('statToggleLabel');
+      const current = showingE0S1 ? document.getElementById('statsE0S1') : document.getElementById('statsE0S0');
+      const next = showingE0S1 ? document.getElementById('statsE0S0') : document.getElementById('statsE0S1');
+
+      showingE0S1 = !showingE0S1;
+
+      // Update toggle appearance
+      toggle.classList.toggle('active', showingE0S1);
+      label.textContent = showingE0S1 ? '5* E0S1 / 4* E6S5' : 'E0S0';
+
+      // Fade out current
+      current.classList.add('fading-out');
+
+      setTimeout(() => {
+        current.classList.add('hidden');
+        current.classList.remove('fading-out');
+
+        // Prepare next
+        next.classList.remove('hidden');
+        next.classList.add('fading-in');
+
+        // Force reflow then fade in
+        void next.offsetWidth;
+        next.classList.remove('fading-in');
+      }, 300);
+    }
+  </script>
+</body>
+</html>
