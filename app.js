@@ -58,7 +58,7 @@ const characters = [
   {n:"Dan Heng • Imbibitor Lunae", p:"Destruction", e:"Imaginary", r:5, img:"https://via.placeholder.com/200x230/2a1a4a/fff?text=DHIL"},
   {n:"Dan Heng • Permansor Terrae",p:"Preservation", e:"Physical", r:5, img:"https://via.placeholder.com/200x230/2a1a4a/fff?text=DHPT"},
   {n:"Dr. Ratio",       p:"Hunt",         e:"Imaginary", r:5, img:"https://via.placeholder.com/200x230/2a1a4a/fff?text=Dr.+Ratio"},
-  {n:"Evanescia",       p:"Elation",      e:"Physical",  r:5, img:"/images/character/evanescia.webp"},
+  {n:"Evanescia",       p:"Elation",      e:"Physical",  r:5, img:"/images/character/evanescia.webp",   page:"/pages/evanescia.html"},
   {n:"Evernight",       p:"Remembrance",  e:"Ice",       r:5, img:"https://via.placeholder.com/200x230/2a1a4a/fff?text=Evernight"},
   {n:"Feixiao",         p:"Hunt",         e:"Wind",      r:5, img:"https://via.placeholder.com/200x230/2a1a4a/fff?text=Feixiao"},
   {n:"Firefly",         p:"Destruction",  e:"Fire",      r:5, img:"https://via.placeholder.com/200x230/2a1a4a/fff?text=Firefly"},
@@ -180,7 +180,14 @@ function render() {
     const card = document.createElement('a');
     card.className = `card rarity-${c.r}`;
     card.href = '#';
-    card.onclick = (e) => { e.preventDefault(); showCharPage(c); };
+    card.onclick = (e) => {
+      e.preventDefault();
+      if (c.page) {
+        window.location.href = c.page;
+      } else {
+        showCharPage(c);
+      }
+    };
     card.innerHTML = `
       <div class="card-img">
         <img src="${c.img}" alt="${c.n}">
