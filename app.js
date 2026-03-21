@@ -3,15 +3,15 @@
 // Recommended size: 24x24px
 // =============================================
 const PATH_ICONS = {
-  Nihility:     'https://via.placeholder.com/24/8888aa/fff?text=Ni',
-  Erudition:    'https://via.placeholder.com/24/8888aa/fff?text=Er',
-  Abundance:    'https://via.placeholder.com/24/8888aa/fff?text=Ab',
-  Hunt:         'https://via.placeholder.com/24/8888aa/fff?text=Hu',
-  Harmony:      'https://via.placeholder.com/24/8888aa/fff?text=Ha',
-  Destruction:  'https://via.placeholder.com/24/8888aa/fff?text=De',
-  Preservation: 'https://via.placeholder.com/24/8888aa/fff?text=Pr',
-  Remembrance:  'https://via.placeholder.com/24/8888aa/fff?text=Re',
-  Elation:      'https://via.placeholder.com/24/8888aa/fff?text=El',
+  Nihility:     '/images/nihility.webp',
+  Erudition:    '/images/erudition.webp',
+  Abundance:    '/images/abundance.webp',
+  Hunt:         '/images/hunt.webp',
+  Harmony:      '/images/harmony.webp',
+  Destruction:  '/images/destruction.webp',
+  Preservation: '/images/preservation.webp',
+  Remembrance:  '/images/remembrance.webp',
+  Elation:      '/images/elation.webp',
 };
 
 // =============================================
@@ -19,13 +19,13 @@ const PATH_ICONS = {
 // Recommended size: 24x24px
 // =============================================
 const ELEMENT_ICONS = {
-  Fire:      'https://via.placeholder.com/24/e04040/fff?text=Fi',
-  Ice:       'https://via.placeholder.com/24/40a0e0/fff?text=Ic',
-  Imaginary: 'https://via.placeholder.com/24/e0c040/fff?text=Im',
-  Physical:  'https://via.placeholder.com/24/a0a0b0/fff?text=Ph',
-  Quantum:   'https://via.placeholder.com/24/8060d0/fff?text=Qu',
-  Lightning: 'https://via.placeholder.com/24/c060e0/fff?text=Li',
-  Wind:      'https://via.placeholder.com/24/40c080/fff?text=Wi',
+  Fire:      '/images/fire.webp',
+  Ice:       '/images/ice.webpc',
+  Imaginary: '/images/imaginary.webp',
+  Physical:  '/images/physical.webp',
+  Quantum:   '/images/quantum.webp',
+  Lightning: '/images/lightning.webp',
+  Wind:      '/images/wind.webp',
 };
 
 const ELEMENT_COLORS = {
