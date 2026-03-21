@@ -233,6 +233,68 @@
     }
     .stat-section-label:first-child { margin-top: 0; }
 
+    /* Stat toggle */
+    .stat-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .stat-toggle-btn {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      border-radius: 11px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: #1a1d45;
+      cursor: pointer;
+      transition: background 0.25s, border-color 0.25s;
+      flex-shrink: 0;
+    }
+    .stat-toggle-btn.active {
+      background: linear-gradient(135deg, #3b2f7a, #5a3fa0);
+      border-color: #6a5acd;
+    }
+    .stat-toggle-btn::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #a0a0c0;
+      transition: transform 0.25s, background 0.25s;
+    }
+    .stat-toggle-btn.active::after {
+      transform: translateX(18px);
+      background: #fff;
+    }
+    .stat-toggle-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #a0a0c0;
+      transition: color 0.25s;
+      user-select: none;
+    }
+    .stat-toggle-label.active-label { color: #d0c8f0; }
+
+    .stat-panel {
+      position: relative;
+    }
+    .stat-table {
+      transition: opacity 0.3s ease;
+    }
+    .stat-table.hidden {
+      display: none;
+    }
+    .stat-table.fading-out {
+      opacity: 0;
+    }
+    .stat-table.fading-in {
+      opacity: 0;
+    }
+
     .rec-entry { margin-bottom: 16px; }
     .rec-entry:last-child { margin-bottom: 0; }
     .rec-name {
@@ -484,7 +546,7 @@
         <div class="char-stars-lg">★★★★★</div>
         <div class="description-box">
           <h3>Description</h3>
-		  <!-- Just add another <p></p> if you need another paragraph -->
+          <!-- Just add another <p></p> if you need another paragraph -->
           <p>Fallen petals scatter with ease, and her stay was but a fleeting instant. Everything about this new era enthralls her, and she will not allow anyone to bring it to ruin...
 
 A cutter adjudicates right and wrong, but who can say how much good or evil lies within oneself?</p>
@@ -498,37 +560,52 @@ A cutter adjudicates right and wrong, but who can say how much good or evil lies
     <div class="wiki-sections">
 
       <!-- Recommended Stats -->
-	  <!-- Edit the EM DASHES, delete any stats you DON'T NEED -->
+      <!-- Edit the EM DASHES, delete any stats you DON'T NEED -->
       <div class="section-card">
         <div class="section-header">
           <span class="icon">✦</span> Recommended Stats
         </div>
         <div class="section-body">
-          <div class="stat-section-label"><b>5* E0S1 / 4* E6S5</b></div>
-          <ul class="trace-list">
-            <li><span>HP</span> <span class="trace-val">—</span></li>
-            <li><span>ATK</span> <span class="trace-val">—</span></li>
-            <li><span>CRIT Rate</span> <span class="trace-val">—</span></li>
-            <li><span>CRIT DMG</span> <span class="trace-val">—</span></li>
-            <li><span>SPD</span> <span class="trace-val">—</span></li>
-            <li><span>Energy Regeneration Rate</span> <span class="trace-val">—</span></li>
-            <li><span>Effect Hit Rate</span> <span class="trace-val">—</span></li>
-            <li><span>Break Effect</span> <span class="trace-val">—</span></li>
-            <li><span>Elemental Damage</span> <span class="trace-val">—</span></li>
-          </ul>
-          <div class="stat-section-label"><b>E0S0</b></div>
-          <ul class="trace-list">
-            <li><span>HP</span> <span class="trace-val">—</span></li>
-            <li><span>ATK</span> <span class="trace-val">—</span></li>
-            <li><span>CRIT Rate</span> <span class="trace-val">—</span></li>
-            <li><span>CRIT DMG</span> <span class="trace-val">—</span></li>
-            <li><span>SPD</span> <span class="trace-val">—</span></li>
-            <li><span>Energy Regeneration Rate</span> <span class="trace-val">—</span></li>
-            <li><span>Effect Hit Rate</span> <span class="trace-val">—</span></li>
-            <li><span>Break Effect</span> <span class="trace-val">—</span></li>
-            <li><span>Elemental Damage</span> <span class="trace-val">—</span></li>
-          </ul>
-		  <div class="stat-section-label"><b>Substat Priority</b></div>
+          <div class="stat-toggle-wrap">
+            <div class="stat-toggle-btn" id="statToggle" onclick="toggleStats()"></div>
+            <span class="stat-toggle-label active-label" id="statToggleLabel">E0S0</span>
+          </div>
+
+          <div class="stat-panel" id="statPanel">
+            <!-- E0S0 table (default, visible) -->
+            <div class="stat-table" id="statsE0S0">
+              <div class="stat-section-label"><b>E0S0</b></div>
+              <ul class="trace-list">
+                <li><span>HP</span> <span class="trace-val">—</span></li>
+                <li><span>ATK</span> <span class="trace-val">—</span></li>
+                <li><span>CRIT Rate</span> <span class="trace-val">—</span></li>
+                <li><span>CRIT DMG</span> <span class="trace-val">—</span></li>
+                <li><span>SPD</span> <span class="trace-val">—</span></li>
+                <li><span>Energy Regeneration Rate</span> <span class="trace-val">—</span></li>
+                <li><span>Effect Hit Rate</span> <span class="trace-val">—</span></li>
+                <li><span>Break Effect</span> <span class="trace-val">—</span></li>
+                <li><span>Elemental Damage</span> <span class="trace-val">—</span></li>
+              </ul>
+            </div>
+
+            <!-- E0S1 / E6S5 table (hidden) -->
+            <div class="stat-table hidden" id="statsE0S1">
+              <div class="stat-section-label"><b>5* E0S1 / 4* E6S5</b></div>
+              <ul class="trace-list">
+                <li><span>HP</span> <span class="trace-val">—</span></li>
+                <li><span>ATK</span> <span class="trace-val">—</span></li>
+                <li><span>CRIT Rate</span> <span class="trace-val">—</span></li>
+                <li><span>CRIT DMG</span> <span class="trace-val">—</span></li>
+                <li><span>SPD</span> <span class="trace-val">—</span></li>
+                <li><span>Energy Regeneration Rate</span> <span class="trace-val">—</span></li>
+                <li><span>Effect Hit Rate</span> <span class="trace-val">—</span></li>
+                <li><span>Break Effect</span> <span class="trace-val">—</span></li>
+                <li><span>Elemental Damage</span> <span class="trace-val">—</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="stat-section-label"><b>Substat Priority</b></div>
           <div class="rec-desc">Z > X > Y</div>
         </div>
       </div>
@@ -791,5 +868,38 @@ A cutter adjudicates right and wrong, but who can say how much good or evil lies
     </div>
 
   </div>
+
+  <script>
+    let showingE0S1 = false;
+
+    function toggleStats() {
+      const toggle = document.getElementById('statToggle');
+      const label = document.getElementById('statToggleLabel');
+      const current = showingE0S1 ? document.getElementById('statsE0S1') : document.getElementById('statsE0S0');
+      const next = showingE0S1 ? document.getElementById('statsE0S0') : document.getElementById('statsE0S1');
+
+      showingE0S1 = !showingE0S1;
+
+      // Update toggle appearance
+      toggle.classList.toggle('active', showingE0S1);
+      label.textContent = showingE0S1 ? '5* E0S1 / 4* E6S5' : 'E0S0';
+
+      // Fade out current
+      current.classList.add('fading-out');
+
+      setTimeout(() => {
+        current.classList.add('hidden');
+        current.classList.remove('fading-out');
+
+        // Prepare next
+        next.classList.remove('hidden');
+        next.classList.add('fading-in');
+
+        // Force reflow then fade in
+        void next.offsetWidth;
+        next.classList.remove('fading-in');
+      }, 300);
+    }
+  </script>
 </body>
 </html>
