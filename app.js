@@ -53,7 +53,7 @@ const characters = [
   {n:"Boothill", p:"Hunt", e:"Physical", r:5, img:"/images/character/boothill.webp", page:"/pages/boothill.html"},
   {n:"Bronya", p:"Harmony", e:"Wind", r:5, img:"/images/character/bronya.webp", page:"/pages/bronya.html"},
   {n:"Castorice", p:"Remembrance", e:"Quantum", r:5, img:"/images/character/castorice.webp", page:"/pages/castorice.html"},
-  {n:"Cerdyra", p:"Harmony", e:"Wind", r:5, img:"/images/character/cerdyra.webp", page:"/pages/cerdyra.html"},
+  {n:"Cerydra", p:"Harmony", e:"Wind", r:5, img:"/images/character/cerydra.webp", page:"/pages/cerydra.html"},
   {n:"Clara", p:"Destruction", e:"Physical", r:5, img:"/images/character/clara.webp", page:"/pages/clara.html"},
   {n:"Cyrene", p:"Remembrance", e:"Ice", r:5, img:"/images/character/cyrene.webp", page:"/pages/cyrene.html"},
   {n:"Dan Heng • Imbibitor Lunae", p:"Destruction", e:"Imaginary", r:5, img:"/images/character/dhil.webp", page:"/pages/dhil.html"},
