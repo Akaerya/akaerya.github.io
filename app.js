@@ -102,7 +102,7 @@ const characters = [
 
   {n:"Arlan", p:"Destruction", e:"Lightning", r:4, img:"/images/character/arlan.webp", page:"/pages/arlan.html"},
   {n:"Asta", p:"Harmony", e:"Fire", r:4, img:"/images/character/asta.webp", page:"/pages/asta.html"},
-  {n:"Dan Heng", p:"Hunt", e:"Wind", r:4, img:"/images/character/dan-heng.webp", page:"/pages/dan-heng.html"},
+  {n:"Dan Heng", p:"Hunt", e:"Wind", r:4, img:"/images/character/danheng.webp", page:"/pages/danheng.html"},
   {n:"Gallagher", p:"Abundance", e:"Fire", r:4, img:"/images/character/gallagher.webp", page:"/pages/gallagher.html"},
   {n:"Guinaifen", p:"Nihility", e:"Fire", r:4, img:"/images/character/guinaifen.webp", page:"/pages/guinaifen.html"},
   {n:"Hanya", p:"Harmony", e:"Physical", r:4, img:"/images/character/hanya.webp", page:"/pages/hanya.html"},
