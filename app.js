@@ -20,7 +20,7 @@ const PATH_ICONS = {
 // =============================================
 const ELEMENT_ICONS = {
   Fire:      '/images/fire.webp',
-  Ice:       '/images/ice.webpc',
+  Ice:       '/images/ice.webp',
   Imaginary: '/images/imaginary.webp',
   Physical:  '/images/physical.webp',
   Quantum:   '/images/quantum.webp',
