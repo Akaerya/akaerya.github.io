@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyrene - Character Details</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b0d1a;
+      color: #e0e0f0;
+      display: flex;
+      min-height: 100vh;
+    }
+    .main {
+      margin-left: 0px;
+      flex: 1;
+      padding: 32px 36px;
+      max-width: 1400px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #14163a;
+      color: #a0a0c0;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 28px;
+      text-decoration: none;
+    }
+    .back-btn:hover { border-color: #6a5acd; color: #e0e0f0; }
+
+    .wiki-top {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .left-col { display: flex; flex-direction: column; gap: 20px; }
+
+    .char-portrait {
+      width: 280px;
+      aspect-ratio: 1 / 1.15;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(160deg, #2a1a4a 0%, #1a1040 50%, #301a50 100%);
+    }
+    .char-portrait img { width: 100%; height: 100%; object-fit: cover; }
+
+    .info-box {
+      background: #12142e;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .info-box-header {
+      background: linear-gradient(135deg, #1e1a45, #2a2060);
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #c0c0f0;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: #8888aa; font-weight: 500; }
+    .info-value {
+      color: #d0d0f0;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .info-value img { width: 20px; height: 20px; border-radius: 4px; }
+    .stars { color: #f0c040; letter-spacing: 1px; }
+
+    .right-col { display: flex; flex-direction: column; }
+
+    .char-name-block { margin-bottom: 8px; }
+    .char-name-block h1 {
+      font-size: 36px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .char-name-block .subtitle {
+      font-size: 14px;
+      color: #8888aa;
+      font-style: italic;
+    }
+    .char-stars-lg {
+      font-size: 20px;
+      color: #f0c040;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+
+    .description-box {
+      background: #12142e;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 24px;
+      flex: 1;
+    }
+    .description-box h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #c0b0f0;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .description-box p {
+      font-size: 14px;
+      line-height: 1.75;
+      color: #b0b0d0;
+    }
+    .description-box p + p { margin-top: 12px; }
+
+    .wiki-sections {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .wiki-section-full { margin-bottom: 20px; }
+
+    .section-card {
+      background: #12142e;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .section-card:hover { border-color: rgba(106,90,205,0.3); }
+
+    .section-header {
+      background: linear-gradient(135deg, #1e1a45, #2a2060);
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #c0c0f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header .icon {
+      width: 20px; height: 20px;
+      border-radius: 6px;
+      background: rgba(106,90,205,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+    }
+    .section-body { padding: 20px; }
+    .section-body p {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #a0a0c0;
+    }
+    .section-body h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #d0c8f0;
+      margin-bottom: 8px;
+    }
+
+    .trace-list { list-style: none; }
+    .trace-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px;
+      color: #a0a0c0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .trace-list li:last-child { border-bottom: none; }
+    .trace-val { color: #d0c8f0; font-weight: 500; }
+
+    .stat-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #8888aa;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+    .stat-section-label:first-child { margin-top: 0; }
+
+    /* Stat toggle */
+    .stat-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .stat-toggle-btn {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      border-radius: 11px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: #1a1d45;
+      cursor: pointer;
+      transition: background 0.25s, border-color 0.25s;
+      flex-shrink: 0;
+    }
+    .stat-toggle-btn.active {
+      background: linear-gradient(135deg, #3b2f7a, #5a3fa0);
+      border-color: #6a5acd;
+    }
+    .stat-toggle-btn::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #a0a0c0;
+      transition: transform 0.25s, background 0.25s;
+    }
+    .stat-toggle-btn.active::after {
+      transform: translateX(18px);
+      background: #fff;
+    }
+    .stat-toggle-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #a0a0c0;
+      transition: color 0.25s;
+      user-select: none;
+    }
+    .stat-toggle-label.active-label { color: #d0c8f0; }
+
+    .stat-panel {
+      position: relative;
+    }
+    .stat-table {
+      transition: opacity 0.3s ease;
+    }
+    .stat-table.hidden {
+      display: none;
+    }
+    .stat-table.fading-out {
+      opacity: 0;
+    }
+    .stat-table.fading-in {
+      opacity: 0;
+    }
+
+    .rec-entry { margin-bottom: 16px; }
+    .rec-entry:last-child { margin-bottom: 0; }
+    .rec-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #d0c8f0;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rec-tag {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(106,90,205,0.2);
+      color: #a090d0;
+    }
+    .rec-tag.bis {
+      background: rgba(240,192,64,0.15);
+      color: #f0c040;
+    }
+    .rec-desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #9090b0;
+    }
+
+    .priority-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .priority-item:last-child { border-bottom: none; }
+    .priority-rank {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .priority-rank.rank-1 { background: rgba(240,192,64,0.2); color: #f0c040; }
+    .priority-rank.rank-2 { background: rgba(192,192,210,0.15); color: #c0c0d2; }
+    .priority-rank.rank-3 { background: rgba(180,130,80,0.15); color: #b4824f; }
+    .priority-rank.rank-4 { background: rgba(140,140,170,0.1); color: #8c8caa; }
+
+    .priority-info { flex: 1; }
+    .priority-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #d0c8f0;
+    }
+    .priority-note {
+      font-size: 12px;
+      color: #8888aa;
+      margin-top: 2px;
+    }
+
+    .team-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .team-row:last-child { margin-bottom: 0; }
+    .team-block {
+      flex: 1;
+      min-width: 280px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .team-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #8888aa;
+      margin-bottom: 12px;
+    }
+    .team-slots { display: flex; gap: 12px; }
+    .team-slot { flex: 1; text-align: center; }
+    .team-slot-icon {
+      width: 56px; height: 56px;
+      border-radius: 12px;
+      margin: 0 auto 6px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      background: #1a1d45;
+    }
+    .team-slot-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .team-slot-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: #d0c8f0;
+    }
+    .team-slot-role {
+      font-size: 10px;
+      color: #7a7ca0;
+      margin-top: 1px;
+    }
+    .team-note {
+      font-size: 12px;
+      color: #8888aa;
+      margin-top: 12px;
+      line-height: 1.5;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .invest-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .invest-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .invest-card-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #8888aa;
+      margin-bottom: 8px;
+    }
+    .invest-card-value {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .invest-card-note {
+      font-size: 11px;
+      color: #7a7ca0;
+    }
+    .grade-s { color: #f0c040; }
+    .grade-a { color: #60d080; }
+    .grade-b { color: #60a0e0; }
+
+    .invest-summary {
+      padding: 16px;
+      background: rgba(106,90,205,0.06);
+      border: 1px solid rgba(106,90,205,0.12);
+      border-radius: 10px;
+    }
+    .invest-summary h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #c0b0f0;
+      margin-bottom: 8px;
+    }
+    .invest-summary p {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #a0a0c0;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #2a2d5a; border-radius: 3px; }
+
+    @media (max-width: 1000px) {
+      .wiki-top { grid-template-columns: 1fr; }
+      .char-portrait { width: 220px; }
+      .wiki-sections { grid-template-columns: 1fr; }
+      .invest-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .main { padding: 16px; }
+      .char-portrait { width: 180px; }
+      .invest-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main">
+    <a href="https://akaerya.github.io/" class="back-btn">← Back to Characters</a>
+
+    <!-- Top: Portrait + Stats | Description -->
+    <div class="wiki-top">
+      <div class="left-col">
+        <div class="char-portrait">
+          <img src="/images/character/cyrene.webp" alt="Cyrene">
+        </div>
+        <div class="info-box">
+          <div class="info-box-header">Character Info</div>
+          <div class="info-row">
+            <span class="info-label">Rarity</span>
+            <span class="info-value stars">★★★★★</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Path</span>
+            <span class="info-value">
+              <img src="/images/remembrance.webp" alt="Remembrance"> Remembrance
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Element</span>
+            <span class="info-value">
+              <img src="/images/ice.webp" alt="Ice"> Ice
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Faction</span>
+            <span class="info-value">Chrysos Heir</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">World</span>
+            <span class="info-value">Amphoreus</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="char-name-block">
+          <h1>Cyrene</h1>
+          <div class="subtitle">Remembrance · Ice · Support</div>
+        </div>
+        <div class="char-stars-lg">★★★★★</div>
+        <div class="description-box">
+          <h3>Build Notes</h3>
+          <p>Recommended stats are out of combat. If you're using 4pc Amphoreus on Cyrene, you can aim for 172 SPD out of combat instead with more CR/CD, but it means that you won't get any DMG boost from Cyrene's A6 until her Ultimate is activated. 180+ SPD out of combat is harder to achieve without any SPD-increasing relic sets, so you can sacrifice some CR/CD if you prefer to have the DMG boost. Both result in about the same performance in Evernight or Castorice teams.</p>
+          <p>For non-Evernight or Castorice teams, it's better to sacrifice CR/CD for more SPD or wear Vonwacq for her to take 3 actions in the first cycle if needed. With 2pc SPD/2pc SPD and Vonwacq, you need 9 SPD subs to hit 180 SPD with Herta LC S5 and 7 SPD subs with S1.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row: Recommended Stats | Recommended LC/Relic | Trace Priority -->
+    <div class="wiki-sections">
+
+      <!-- Recommended Stats -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="icon">✦</span> Recommended Stats (out of combat)
+        </div>
+        <div class="section-body">
+          <div class="stat-toggle-wrap">
+            <div class="stat-toggle-btn" id="statToggle" onclick="toggleStats()"></div>
+            <span class="stat-toggle-label active-label" id="statToggleLabel">E0S0</span>
+          </div>
+
+          <div class="stat-panel" id="statPanel">
+            <!-- E0S0 table (default, visible) -->
+            <div class="stat-table" id="statsE0S0">
+              <div class="stat-section-label"><b>E0S0 (Memory's Curtain Never Falls)</b></div>
+              <ul class="trace-list">
+                <li><span>HP</span> <span class="trace-val">4500+ / 5700+</span></li>
+                <li><span>CRIT Rate</span> <span class="trace-val">40% - 50%</span></li>
+                <li><span>CRIT DMG</span> <span class="trace-val">120%+</span></li>
+                <li><span>SPD</span> <span class="trace-val">180+</span></li>
+              </ul>
+              <div style="margin-top: 10px; font-size: 12px; color: #8888aa; line-height: 1.5;">Alternatively, aim for 200+ SPD (or 180+ with Vonwacq) and ignore CR/CD. This is recommended more for non-Evernight or Castorice teams.</div>
+            </div>
+
+            <!-- E0S1 / E6S5 table (hidden) -->
+            <div class="stat-table hidden" id="statsE0S1">
+              <div class="stat-section-label"><b>5* E0S1 (This Love, Forever)</b></div>
+              <ul class="trace-list">
+                <li><span>HP</span> <span class="trace-val">4800+ / 6100+</span></li>
+                <li><span>CRIT Rate</span> <span class="trace-val">40% - 50%</span></li>
+                <li><span>CRIT DMG</span> <span class="trace-val">150%+</span></li>
+                <li><span>SPD</span> <span class="trace-val">180+</span></li>
+              </ul>
+              <div style="margin-top: 10px; font-size: 12px; color: #8888aa; line-height: 1.5;">Alternatively, aim for 200+ SPD (or 180+ with Vonwacq) and ignore CR/CD. This is recommended more for non-Evernight or Castorice teams.</div>
+            </div>
+          </div>
+
+          <div class="stat-section-label"><b>Mainstat/Substat Priority</b></div>
+          <div class="rec-desc">Body: CD, or any with SPD · Boots: SPD · Sphere: DMG > HP, or any with SPD · Rope: HP</div>
+          <div class="rec-desc">SPD > CR > CD > HP</div>
+        </div>
+      </div>
+
+      <!-- Recommended Light Cones / Relic Sets -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="icon">◈</span> Recommended Light Cones / Relic Sets
+        </div>
+        <div class="section-body">
+          <h4>Light Cones</h4>
+          <div class="rec-entry">
+            <div class="rec-name">This Love, Forever S1 <span class="rec-tag bis">BiS</span></div>
+            <div class="rec-desc">Cyrene's signature light cone — provides the best overall stat package and effects for her support and sub-DPS capabilities.</div>
+          </div>
+          <div class="rec-entry">
+            <div class="rec-name">Long May Rainbows Adorn the Sky S1 <span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">A strong alternative that complements Cyrene's kit well when her signature is unavailable.</div>
+          </div>
+          <div class="rec-entry">
+            <div class="rec-name">Memory's Curtain Never Falls S5 <span class="rec-tag">F2P</span></div>
+            <div class="rec-desc">The free-to-play option for Cyrene. At S5, it provides solid value and is the assumed light cone for the E0S0 stat recommendations.</div>
+          </div>
+
+          <h4 style="margin-top:20px;">Relic Sets</h4>
+          <div class="rec-entry">
+            <div class="rec-name">World-Remaking Deliverer 4pc <span class="rec-tag bis">BiS (Sub-DPS)</span></div>
+            <div class="rec-desc">Best-in-slot for the sub-DPS build, maximizing Cyrene's personal damage contribution alongside her support utility.</div>
+          </div>
+          <div class="rec-entry">
+            <div class="rec-name">2pc SPD / 2pc SPD <span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">Helps reach 180+ SPD breakpoints more comfortably. Mix and match any two 2pc sets that provide SPD.</div>
+          </div>
+          <div class="rec-entry">
+            <div class="rec-name">2pc SPD / 2pc Crit <span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">A balanced split that provides some SPD while maintaining crit stats for sub-DPS contribution.</div>
+          </div>
+          <div class="rec-entry">
+            <div class="rec-name">Eagle of Twilight Line 4pc <span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">Another option that helps with action advancement and SPD requirements.</div>
+          </div>
+
+          <h4 style="margin-top:20px;">Planar Ornaments</h4>
+          <div class="rec-entry">
+            <div class="rec-name">Amphoreus, the Eternal Land <span class="rec-tag bis">BiS</span></div>
+            <div class="rec-desc">Best-in-slot planar. If using this, you can aim for 172 SPD out of combat instead with more CR/CD, but you won't get Cyrene's A6 DMG boost until her Ultimate is activated.</div>
+          </div>
+          <div class="rec-entry">
+            <div class="rec-name">Sprightly Vonwacq <span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">Helps Cyrene take 3 actions in the first cycle. Especially recommended for non-Evernight or Castorice teams where more SPD is prioritized over CR/CD.</div>
+          </div>
+          <div class="rec-entry">
+            <div class="rec-name">Forge of the Kalpagni Lantern <span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">Provides SPD to help hit breakpoints when Amphoreus or Vonwacq are not available.</div>
+          </div>
+          <div class="rec-entry">
+            <div class="rec-name">Giant Tree of Rapt Brooding <span class="rec-tag">Alternative</span></div>
+            <div class="rec-desc">Another SPD planar option for reaching breakpoints.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trace Priority -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="icon">⚙</span> Trace Priority
+        </div>
+        <div class="section-body">
+          <h4>Character Traces</h4>
+          <div class="priority-item">
+            <div class="priority-rank rank-1">1</div>
+            <div class="priority-info">
+              <div class="priority-name">Skill</div>
+              <div class="priority-note">High priority — Cyrene's Skill is core to her support and sub-DPS functionality.</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-rank rank-1">1</div>
+            <div class="priority-info">
+              <div class="priority-name">Ultimate</div>
+              <div class="priority-note">High priority — provides significant team-wide buffs and activates her A6 passive.</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-rank rank-3">3</div>
+            <div class="priority-info">
+              <div class="priority-name">Basic ATK</div>
+              <div class="priority-note">Medium priority — contributes to Cyrene's personal damage between Skill uses.</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-rank rank-3">3</div>
+            <div class="priority-info">
+              <div class="priority-name">Talent</div>
+              <div class="priority-note">Medium priority — passively enhances Cyrene's kit.</div>
+            </div>
+          </div>
+
+          <h4 style="margin-top:20px;">Memosprite Traces</h4>
+          <div class="priority-item">
+            <div class="priority-rank rank-1">1</div>
+            <div class="priority-info">
+              <div class="priority-name">Memosprite Skill</div>
+              <div class="priority-note">High priority — a key component of Cyrene's support and damage output through her Memosprite.</div>
+            </div>
+          </div>
+          <div class="priority-item">
+            <div class="priority-rank rank-3">3</div>
+            <div class="priority-info">
+              <div class="priority-name">Memosprite Talent</div>
+              <div class="priority-note">Medium priority — supplements the Memosprite's overall contribution.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Suggestions -->
+    <div class="wiki-section-full">
+      <div class="section-card">
+        <div class="section-header">
+          <span class="icon">👥</span> Team Suggestions
+        </div>
+        <div class="section-body">
+          <div class="team-row">
+            <div class="team-block">
+              <div class="team-label">Castorice Mono-Remembrance</div>
+              <div class="team-slots">
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Castorice_Icon.webp" alt="Castorice"></div>
+                  <div class="team-slot-name">Castorice</div>
+                  <div class="team-slot-role">Main DPS</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Evernight_Icon.webp" alt="Evernight"></div>
+                  <div class="team-slot-name">Evernight</div>
+                  <div class="team-slot-role">Sub DPS</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Cyrene_Icon.webp" alt="Cyrene"></div>
+                  <div class="team-slot-name">Cyrene</div>
+                  <div class="team-slot-role">Support</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Hyacine_Icon.webp" alt="Hyacine"></div>
+                  <div class="team-slot-name">Hyacine</div>
+                  <div class="team-slot-role">Sustain</div>
+                </div>
+              </div>
+              <div class="team-note">Cyrene's premier team. The full mono-Remembrance core with Castorice, Evernight, and Hyacine provides the strongest synergy and damage output.</div>
+            </div>
+            <div class="team-block">
+              <div class="team-label">Evernight (without Castorice)</div>
+              <div class="team-slots">
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Evernight_Icon.webp" alt="Evernight"></div>
+                  <div class="team-slot-name">Evernight</div>
+                  <div class="team-slot-role">DPS</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Cyrene_Icon.webp" alt="Cyrene"></div>
+                  <div class="team-slot-name">Cyrene</div>
+                  <div class="team-slot-role">Support</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Tribbie_Icon.webp" alt="Tribbie"></div>
+                  <div class="team-slot-name">Tribbie / RMC</div>
+                  <div class="team-slot-role">Support</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Hyacine_Icon.webp" alt="Hyacine"></div>
+                  <div class="team-slot-name">Hyacine</div>
+                  <div class="team-slot-role">Sustain</div>
+                </div>
+              </div>
+              <div class="team-note">Cyrene paired with Evernight as the primary carry, supported by Tribbie or RMC and Hyacine for sustain.</div>
+            </div>
+          </div>
+          <div class="team-row">
+            <div class="team-block">
+              <div class="team-label">Anaxa Team</div>
+              <div class="team-slots">
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Anaxa_Icon.webp" alt="Anaxa"></div>
+                  <div class="team-slot-name">Anaxa</div>
+                  <div class="team-slot-role">DPS</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Cerydra_Icon.webp" alt="Cerydra"></div>
+                  <div class="team-slot-name">Cerydra</div>
+                  <div class="team-slot-role">Harmony</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Cyrene_Icon.webp" alt="Cyrene"></div>
+                  <div class="team-slot-name">Cyrene</div>
+                  <div class="team-slot-role">Support</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_DHPT_Icon.webp" alt="DHPT"></div>
+                  <div class="team-slot-name">DHPT / Hyacine</div>
+                  <div class="team-slot-role">Sustain</div>
+                </div>
+              </div>
+              <div class="team-note">Cyrene supports Anaxa's multi-skill playstyle alongside Cerydra's Harmony buffs. DHPT or Hyacine provide sustain.</div>
+            </div>
+            <div class="team-block">
+              <div class="team-label">Mydei Team</div>
+              <div class="team-slots">
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Mydei_Icon.webp" alt="Mydei"></div>
+                  <div class="team-slot-name">Mydei</div>
+                  <div class="team-slot-role">DPS</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Cyrene_Icon.webp" alt="Cyrene"></div>
+                  <div class="team-slot-name">Cyrene</div>
+                  <div class="team-slot-role">Support</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Tribbie_Icon.webp" alt="Tribbie"></div>
+                  <div class="team-slot-name">Tribbie / RMC</div>
+                  <div class="team-slot-role">Support</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Hyacine_Icon.webp" alt="Hyacine"></div>
+                  <div class="team-slot-name">Hyacine</div>
+                  <div class="team-slot-role">Sustain</div>
+                </div>
+              </div>
+              <div class="team-note">Cyrene supporting Mydei with Tribbie or RMC as the second support and Hyacine for sustain.</div>
+            </div>
+          </div>
+          <div class="team-row">
+            <div class="team-block">
+              <div class="team-label">Aglaea Team</div>
+              <div class="team-slots">
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Aglaea_Icon.webp" alt="Aglaea"></div>
+                  <div class="team-slot-name">Aglaea</div>
+                  <div class="team-slot-role">DPS</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Cyrene_Icon.webp" alt="Cyrene"></div>
+                  <div class="team-slot-name">Cyrene</div>
+                  <div class="team-slot-role">Support</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_Sunday_Icon.webp" alt="Sunday"></div>
+                  <div class="team-slot-name">Sunday / RMC</div>
+                  <div class="team-slot-role">Support</div>
+                </div>
+                <div class="team-slot">
+                  <div class="team-slot-icon"><img src="/images/small/Character_DHPT_Icon.webp" alt="DHPT"></div>
+                  <div class="team-slot-name">DHPT / Hyacine</div>
+                  <div class="team-slot-role">Sustain</div>
+                </div>
+              </div>
+              <div class="team-note">Cyrene alongside Aglaea with Sunday or RMC providing additional support, and DHPT or Hyacine for sustain.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vertical Investment Analysis -->
+    <div class="wiki-section-full">
+      <div class="section-card">
+        <div class="section-header">
+          <span class="icon">📊</span> Vertical Investment Analysis
+        </div>
+        <div class="section-body">
+          <div class="invest-grid">
+            <div class="invest-card">
+              <div class="invest-card-label">E1</div>
+              <div class="invest-card-value grade-b">★</div>
+              <div class="invest-card-note">&lt;10% improvement</div>
+            </div>
+            <div class="invest-card">
+              <div class="invest-card-label">S1</div>
+              <div class="invest-card-value grade-a">★★★ — ★★★★</div>
+              <div class="invest-card-note">12-20% + QoL</div>
+            </div>
+            <div class="invest-card">
+              <div class="invest-card-label">E2 (Mono-Rem)</div>
+              <div class="invest-card-value grade-b">★★</div>
+              <div class="invest-card-note">14-20% improvement</div>
+            </div>
+            <div class="invest-card">
+              <div class="invest-card-label">E2 (Other CH)</div>
+              <div class="invest-card-value grade-a">★★★★+</div>
+              <div class="invest-card-note">Significant boost</div>
+            </div>
+          </div>
+
+          <div class="invest-summary">
+            <h4>Investment Recommendation</h4>
+            <p>Cyrene's investment value varies depending on the team she's used in. Her E1 provides less than 10% improvement across all teams, making it a low-priority pull. Her signature light cone (S1) is the most consistent investment at 12-20% improvement plus quality-of-life benefits — it's valued at ★★★ in mono-Remembrance teams and ★★★★ in other Chrysos Heir teams. E2 ranges from a moderate ★★ in mono-Remembrance setups (14-20%) to ★★★★ or higher in other team compositions where she benefits more from the extra Eidolon effects.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let showingE0S1 = false;
+
+    function toggleStats() {
+      const toggle = document.getElementById('statToggle');
+      const label = document.getElementById('statToggleLabel');
+      const current = showingE0S1 ? document.getElementById('statsE0S1') : document.getElementById('statsE0S0');
+      const next = showingE0S1 ? document.getElementById('statsE0S0') : document.getElementById('statsE0S1');
+
+      showingE0S1 = !showingE0S1;
+
+      // Update toggle appearance
+      toggle.classList.toggle('active', showingE0S1);
+      label.textContent = showingE0S1 ? '5* E0S1 / 4* E6S5' : 'E0S0';
+
+      // Fade out current
+      current.classList.add('fading-out');
+
+      setTimeout(() => {
+        current.classList.add('hidden');
+        current.classList.remove('fading-out');
+
+        // Prepare next
+        next.classList.remove('hidden');
+        next.classList.add('fading-in');
+
+        // Force reflow then fade in
+        void next.offsetWidth;
+        next.classList.remove('fading-in');
+      }, 300);
+    }
+  </script>
+</body>
+</html>
