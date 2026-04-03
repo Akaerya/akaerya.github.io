@@ -269,6 +269,26 @@
       line-height: 1.6;
       color: #9090b0;
     }
+    .mainstat-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .mainstat-list li {
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px;
+      color: #a0a0c0;
+    }
+    .mainstat-list li:last-child { border-bottom: none; }
+    .mainstat-slot {
+      font-weight: 600;
+      color: #8888aa;
+    }
+    .mainstat-val {
+      color: #d0c8f0;
+      font-weight: 500;
+    }
     .priority-item {
       display: flex;
       align-items: center;
@@ -540,9 +560,15 @@
             </div>
           </div>
 
-          <div class="stat-section-label"><b>Mainstat/Substat Priority</b></div>
-          <div class="rec-desc">Body: CD, or any with SPD · Boots: SPD · Sphere: DMG > HP, or any with SPD · Rope: HP</div>
-          <div class="rec-desc">SPD > CR > CD > HP</div>
+          <div class="stat-section-label"><b>Mainstat Priority</b></div>
+          <ul class="mainstat-list" id="mainstatList">
+                <li><span class="mainstat-slot">Body:</span> <span class="mainstat-val">CD, or any with SPD</span></li>
+                <li><span class="mainstat-slot">Boots:</span> <span class="mainstat-val">SPD</span></li>
+                <li><span class="mainstat-slot">Sphere:</span> <span class="mainstat-val">DMG > HP, or any with SPD</span></li>
+                <li><span class="mainstat-slot">Rope:</span> <span class="mainstat-val">HP</span></li>
+          </ul>
+          <div class="stat-section-label" style="margin-top:12px;"><b>Substat Priority</b></div>
+          <div class="rec-desc">SPD > CR (until 100% with ultimate) > CD > HP</div>
         </div>
       </div>
 

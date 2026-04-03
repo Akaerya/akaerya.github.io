@@ -269,6 +269,26 @@
       line-height: 1.6;
       color: #9090b0;
     }
+    .mainstat-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .mainstat-list li {
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px;
+      color: #a0a0c0;
+    }
+    .mainstat-list li:last-child { border-bottom: none; }
+    .mainstat-slot {
+      font-weight: 600;
+      color: #8888aa;
+    }
+    .mainstat-val {
+      color: #d0c8f0;
+      font-weight: 500;
+    }
     .priority-item {
       display: flex;
       align-items: center;
@@ -290,6 +310,14 @@
     .priority-rank.rank-3 { background: rgba(180,130,80,0.15); color: #b4824f; }
     .priority-rank.rank-4 { background: rgba(140,140,170,0.1); color: #8c8caa; }
     .priority-info { flex: 1; }
+    .priority-type {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #7a6ae0;
+      margin-bottom: 2px;
+    }
     .priority-name {
       font-size: 13px;
       font-weight: 600;
@@ -486,6 +514,10 @@
           <div class="subtitle">"O, noble guest from afar. The wind brought me news of you along the golden threads. My name is Aglaea, the Dressmaster of Okhema and one of Amphoreus' Chrysos Heirs. I hope we treat each other with honesty."</div>
         </div>
         <div class="char-stars-lg">★★★★★</div>
+        <div class="description-box" style="margin-bottom: 16px;">
+          <h3>Character Summary</h3>
+          
+        </div>
         <div class="description-box">
           <h3>Build Notes</h3>
           <p>Recommended stats are out of combat, but you can decrease CD/SPD recommendations by 30% CD and 6-7 SPD respectively if you are on Hero 4pc. Recommended stats here assume ATK rope on Aglaea as well, but Aglaea teams with Sunday only will still need ERR rope.</p>
@@ -529,9 +561,15 @@
             </div>
           </div>
 
-          <div class="stat-section-label"><b>Mainstat/Substat Priority</b></div>
-          <div class="rec-desc">Body: CR or CD · Boots: SPD or ATK · Sphere: DMG > ATK · Rope: ATK or ERR</div>
-          <div class="rec-desc">CR > CD > SPD > ATK</div>
+          <div class="stat-section-label"><b>Mainstat Priority</b></div>
+          <ul class="mainstat-list" id="mainstatList">
+                <li><span class="mainstat-slot">Body:</span> <span class="mainstat-val">CR or CD</span></li>
+                <li><span class="mainstat-slot">Boots:</span> <span class="mainstat-val">SPD or ATK</span></li>
+                <li><span class="mainstat-slot">Sphere:</span> <span class="mainstat-val">DMG > ATK</span></li>
+                <li><span class="mainstat-slot">Rope:</span> <span class="mainstat-val">ATK or ERR</span></li>
+          </ul>
+          <div class="stat-section-label" style="margin-top:12px;"><b>Substat Priority</b></div>
+          <div class="rec-desc">CRIT RATE > CRIT DMG > SPD > ATK</div>
         </div>
       </div>
 
@@ -561,7 +599,7 @@
           <h4 style="margin-top:20px;">Relic Sets</h4>
           <div class="rec-entry">
             <div class="rec-name">Hero of Triumphant Song <span class="rec-tag bis">BiS</span></div>
-            <div class="rec-desc">Best set for Aglaea, this offers her and Garmentmaker ATK and CRIT DMG, both stats that she needs to scale and deal damage. </div>
+            <div class="rec-desc">Best set for Aglaea, this offers her and Garmentmaker ATK and CRIT DMG, both stats that she needs to scale and deal damage.</div>
           </div>
           <div class="rec-entry">
             <div class="rec-name">2pc CRIT% sets / 2pc SPD% sets <span class="rec-tag">Alternative</span></div>
@@ -598,28 +636,32 @@
           <div class="priority-item">
             <div class="priority-rank rank-1">1</div>
             <div class="priority-info">
-              <div class="priority-name">Basic ATK - Slash by a Thousandfold Kiss</div>
-              <div class="priority-note"></div>
+              <div class="priority-type">Basic ATK</div>
+              <div class="priority-name" data-trace-type="Basic ATK">Slash by a Thousandfold Kiss</div>
+              <div class="priority-note">Primary damage source.</div>
             </div>
           </div>
           <div class="priority-item">
             <div class="priority-rank rank-2">2</div>
             <div class="priority-info">
-              <div class="priority-name">Ultimate - Dance, Destined Weaveress</div>
+              <div class="priority-type">Ultimate</div>
+              <div class="priority-name" data-trace-type="Ultimate">Dance, Destined Weaveress</div>
               <div class="priority-note"></div>
             </div>
           </div>
           <div class="priority-item">
             <div class="priority-rank rank-3">3</div>
             <div class="priority-info">
-              <div class="priority-name">Talent - Rosy-Fingered</div>
+              <div class="priority-type">Talent</div>
+              <div class="priority-name" data-trace-type="Talent">Rosy-Fingered</div>
               <div class="priority-note"></div>
             </div>
           </div>
           <div class="priority-item">
             <div class="priority-rank rank-4">4</div>
             <div class="priority-info">
-              <div class="priority-name">Skill - Rise, Exalted Renown</div>
+              <div class="priority-type">Skill</div>
+              <div class="priority-name" data-trace-type="Skill">Rise, Exalted Renown</div>
               <div class="priority-note">Honestly, kinda useless. Ideally, your Garmentmaker either goes really fast and kills the enemies, or your ultimate comes up and restores itself anyway.</div>
             </div>
           </div>
@@ -628,15 +670,17 @@
           <div class="priority-item">
             <div class="priority-rank rank-1">1</div>
             <div class="priority-info">
-              <div class="priority-name">Memosprite Talent</div>
-              <div class="priority-note">A Body Brewed by Tears</div>
+              <div class="priority-type">Memosprite Talent</div>
+              <div class="priority-name" data-trace-type="Memosprite Talent">A Body Brewed by Tears</div>
+              <div class="priority-note"></div>
             </div>
           </div>
           <div class="priority-item">
-            <div class="priority-rank rank-2">2</div>
+            <div class="priority-rank rank-1">1</div>
             <div class="priority-info">
-              <div class="priority-name">Memosprite Skill</div>
-              <div class="priority-note">Thorned Snare</div>
+              <div class="priority-type">Memosprite Skill</div>
+              <div class="priority-name" data-trace-type="Memosprite Skill">Thorned Snare</div>
+              <div class="priority-note"></div>
             </div>
           </div>
         </div>
