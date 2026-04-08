@@ -12,6 +12,8 @@ export async function getStaticPaths() {
 
 	const allCharacters = client.getAllCharacters();
 
+  console.log(allCharacters[allCharacters.length - 1].name.get());
+
 	return allCharacters.map((character) => ({
 		params: { id: character.id.toString() },
 		props: { character },
@@ -40,14 +42,14 @@ const stars = "★".repeat(character.stars);
 ---
 
 <Layout title={character.name.get()}>
-  <main class="min-h-screen bg-background">
+  <main class="bg-background">
 
     <!-- Hero splash -->
-    <div class="relative h-[500px] overflow-hidden">
+    <div class="relative h-80 overflow-hidden">
       <img
         src={toWebP(character.splashImage.url)}
         alt={character.name.get()}
-        class="absolute inset-0 h-full w-full object-cover object-top"
+        class="absolute inset-0 h-full w-full object-cover object-center"
       />
       <div class="absolute inset-0 bg-linear-to-t from-background via-background/50 to-transparent" />
 
