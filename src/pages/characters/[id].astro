@@ -1,0 +1,128 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { ArrowLeft } from "@lucide/astro";
+import { url } from "@utils/url";
+import { StarRail } from "starrail.js";
+
+export async function getStaticPaths() {
+	const client = new StarRail({
+		cacheDirectory: "./cache",
+		showFetchCacheLog: false,
+	});
+
+	const allCharacters = client.getAllCharacters();
+
+	return allCharacters.map((character) => ({
+		params: { id: character.id.toString() },
+		props: { character },
+	}));
+}
+
+const { character } = Astro.props;
+
+function toWebP(url: string): string {
+	return url.replace(/\.png$/, ".webp");
+}
+
+const mainSkillTypes = ["Normal", "BPSkill", "Ultra", "Talent"];
+const mainSkills = character.skills.filter((s: { skillType: string }) =>
+	mainSkillTypes.includes(s.skillType),
+);
+
+const skillTypeLabel: Record<string, string> = {
+	Normal: "Basic ATK",
+	BPSkill: "Skill",
+	Ultra: "Ultimate",
+	Talent: "Talent",
+};
+
+const stars = "★".repeat(character.stars);
+---
+
+<Layout title={character.name.get()}>
+  <main class="min-h-screen bg-background">
+
+    <!-- Hero splash -->
+    <div class="relative h-[500px] overflow-hidden">
+      <img
+        src={toWebP(character.splashImage.url)}
+        alt={character.name.get()}
+        class="absolute inset-0 h-full w-full object-cover object-top"
+      />
+      <div class="absolute inset-0 bg-linear-to-t from-background via-background/50 to-transparent" />
+
+      <div class="absolute bottom-0 left-0 px-8 pb-8">
+        <a
+          href={url("/characters")}
+          class="mb-4 inline-flex items-center gap-1 text-sm text-foreground/60 hover:text-foreground transition-colors"
+        >
+          <ArrowLeft size={16} /> All Characters
+        </a>
+        <h1 class="font-heading text-5xl font-bold text-foreground drop-shadow-md">
+          {character.name.get()}
+        </h1>
+        <div class="mt-2 flex flex-wrap items-center gap-2">
+          <span class="text-yellow-400 text-xl tracking-widest">{stars}</span>
+          <span class="rounded-full border border-border/60 bg-background/60 backdrop-blur px-3 py-0.5 text-sm text-foreground/80">
+            {character.path.name.get()}
+          </span>
+          <span class="rounded-full border border-border/60 bg-background/60 backdrop-blur px-3 py-0.5 text-sm text-foreground/80">
+            {character.combatType.name.get()}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="mx-auto max-w-4xl px-6 py-10 space-y-12">
+
+      <!-- Description -->
+      {character.description.get() && (
+        <p class="text-foreground/70 leading-relaxed text-base">
+          {character.description.get()}
+        </p>
+      )}
+
+      <!-- Skills -->
+      <section>
+        <h2 class="mb-5 text-xl font-semibold text-foreground tracking-tight">Skills</h2>
+        <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {mainSkills.map((skill: { skillIcon: { url: string }; skillType: string; name: { get: () => string } }) => (
+            <div class="flex flex-col items-center gap-2 rounded-2xl border border-border/60 bg-background-secondary p-5 text-center">
+              <img
+                src={toWebP(skill.skillIcon.url)}
+                alt={skill.name.get()}
+                class="h-14 w-14 object-contain invert dark:invert-0"
+              />
+              <span class="text-[11px] font-medium uppercase tracking-widest text-foreground/40">
+                {skillTypeLabel[skill.skillType] ?? skill.skillType}
+              </span>
+              <span class="text-sm font-semibold text-foreground leading-snug">
+                {skill.name.get()}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Eidolons -->
+      <section>
+        <h2 class="mb-5 text-xl font-semibold text-foreground tracking-tight">Eidolons</h2>
+        <div class="grid grid-cols-3 gap-4 sm:grid-cols-6">
+          {character.eidolons.map((eidolon: { icon: { url: string }; name: { get: () => string }; rank: number }) => (
+            <div class="flex flex-col items-center gap-2 rounded-2xl border border-border/60 bg-background-secondary p-4 text-center">
+              <img
+                src={toWebP(eidolon.icon.url)}
+                alt={eidolon.name.get()}
+                class="h-12 w-12 object-contain opacity-80 invert dark:invert-0"
+              />
+              <span class="text-[11px] font-medium text-foreground/80">E{eidolon.rank}</span>
+              <span class="text-xs text-foreground/70">{eidolon.name.get()}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+    </div>
+  </main>
+</Layout>

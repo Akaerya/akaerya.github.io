@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+
+@theme {
+	--font-heading: "Instrument Serif", serif;
+	--font-body: "Manrope", sans-serif;
+}
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
