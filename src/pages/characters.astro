@@ -1,7 +1,7 @@
 ---
 import { Card } from "@heroui/react";
 import Layout from "@layouts/Layout.astro";
-import { url } from "@utils/url";
+import { getImageUrl, url } from "@utils/url";
 import { StarRail } from "starrail.js";
 
 const client = new StarRail({
@@ -10,6 +10,8 @@ const client = new StarRail({
 });
 
 const allCharacters = client.getAllCharacters();
+
+console.log(allCharacters[allCharacters.length - 1].stars);
 
 function toWebP(url: string): string {
 	return url.replace(/\.png$/, ".webp");
@@ -25,12 +27,27 @@ function toWebP(url: string): string {
         allCharacters.map((character) => (
           <a href={url(`/characters/${character.id}`)} class="group outline-none">
             <Card className="w-40 border border-border/60 h-60 transition-transform group-hover:scale-[1.03] group-focus-visible:ring-2 group-focus-visible:ring-foreground">
+              <div
+                class={`absolute inset-0 bg-linear-to-t ${
+                  character.stars === 5
+                    ? "from-yellow-500/40 via-yellow-500/5 to-transparent"
+                    : character.stars === 4
+                      ? "from-purple-500/40 via-purple-500/5 to-transparent"
+                      : ""
+                }`}
+              />
               <img
-                src={toWebP(character.shopItemIcon.url)}
+                src={getImageUrl(character.shopItemIcon.path)}
                 alt={character.name.get()}
                 class="absolute inset-0 h-full w-full object-cover"
               />
-              <Card.Footer className="font-heading text-2xl z-10 mt-auto">
+              <Card.Header>
+                <div class="absolute inset-0 bg-surface-secondary items-center justify-center flex w-12 h-8 rounded-br-lg">
+                  <img src={getImageUrl(character.combatType.bigIcon.path)} alt={character.combatType.name.get()} class="absolute size-5" />
+                </div>
+              </Card.Header>
+
+              <Card.Footer className="font-heading font-bold text-2xl z-10 mt-auto">
                 {character.name.get()}
               </Card.Footer>
             </Card>
