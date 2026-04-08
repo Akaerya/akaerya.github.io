@@ -12,8 +12,6 @@ export async function getStaticPaths() {
 
 	const allCharacters = client.getAllCharacters();
 
-  console.log(allCharacters[allCharacters.length - 1].name.get());
-
 	return allCharacters.map((character) => ({
 		params: { id: character.id.toString() },
 		props: { character },

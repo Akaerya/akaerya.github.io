@@ -4,6 +4,14 @@
 @theme {
 	--font-heading: "Instrument Serif", serif;
 	--font-body: "Manrope", sans-serif;
+
+	--container-8xl: 88rem;
 }
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@layer base {
+	html {
+		scrollbar-gutter: stable;
+	}
+}
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
