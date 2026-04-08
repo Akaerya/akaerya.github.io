@@ -17,23 +17,20 @@ function toWebP(url: string): string {
 ---
 
 <Layout title="Characters">
-  <main class="bg-background py-4">
-    <h1 class="mb-8 text-3xl font-bold tracking-tight text-foreground">
-      Characters
-    </h1>
+  <main class="bg-background py-6">
     <div
       class="grid w-full grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-5"
     >
       {
         allCharacters.map((character) => (
           <a href={url(`/characters/${character.id}`)} class="group outline-none">
-            <Card className="w-40 border-2 border-border/40 h-60 transition-transform group-hover:scale-[1.03] group-focus-visible:ring-2 group-focus-visible:ring-foreground">
+            <Card className="w-40 border border-border/60 h-60 transition-transform group-hover:scale-[1.03] group-focus-visible:ring-2 group-focus-visible:ring-foreground">
               <img
                 src={toWebP(character.shopItemIcon.url)}
                 alt={character.name.get()}
                 class="absolute inset-0 h-full w-full object-cover"
               />
-              <Card.Footer className="font-heading text-xl z-10 mt-auto">
+              <Card.Footer className="font-heading text-2xl z-10 mt-auto">
                 {character.name.get()}
               </Card.Footer>
             </Card>
