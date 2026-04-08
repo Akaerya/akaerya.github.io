@@ -1,8 +1,8 @@
 ---
-import { Card } from "@heroui/react";
 import Layout from "@layouts/Layout.astro";
 import { getImageUrl, url } from "@utils/url";
 import { StarRail } from "starrail.js";
+import { CharacterFilter, type CharacterData } from "@components/CharacterFilter";
 
 const client = new StarRail({
   cacheDirectory: "./cache",
@@ -11,60 +11,20 @@ const client = new StarRail({
 
 const allCharacters = client.getAllCharacters();
 
-console.log(allCharacters[allCharacters.length - 1].stars);
-
-function toWebP(url: string): string {
-  return url.replace(/\.png$/, ".webp");
-}
+const characterData: CharacterData[] = allCharacters.map((character) => ({
+  id: character.id,
+  name: character.name.get(),
+  element: character.combatType.name.get(),
+  path: character.path.name.get(),
+  cardImageUrl: getImageUrl(character.shopItemIcon.path),
+  elementIconUrl: getImageUrl(character.combatType.icon.path),
+  stars: character.stars,
+  href: url(`/characters/${character.id}`),
+}));
 ---
 
 <Layout title="Characters">
   <main class="bg-background py-6 px-4">
-    <div
-      class="grid w-full grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-5"
-    >
-      {
-        allCharacters.map((character) => (
-          <a
-            href={url(`/characters/${character.id}`)}
-            class="group outline-none"
-          >
-            <Card className="w-40 border border-border/60 h-60 transition-transform group-hover:scale-[1.03] group-focus-visible:ring-2 group-focus-visible:ring-foreground">
-              {/* <div
-                class={`absolute inset-0 bg-linear-to-t ${
-                  character.stars === 5
-                    ? "from-yellow-500/40 via-yellow-500/5 to-transparent"
-                    : character.stars === 4
-                      ? "from-purple-500/40 via-purple-500/5 to-transparent"
-                      : ""
-                }`}
-              /> */}
-              <img
-                src={getImageUrl(character.shopItemIcon.path)}
-                alt={character.name.get()}
-                class="absolute inset-0 h-full w-full object-cover"
-              />
-              <Card.Header>
-                <div class="absolute inset-0 bg-surface-secondary/60 items-center justify-center flex w-14 h-9 gap-x-2 rounded-br-lg">
-                  <img
-                    src={getImageUrl(character.combatType.bigIcon.path)}
-                    alt={character.combatType.name.get()}
-                    class=" size-6"
-                  />
-                </div>
-              </Card.Header>
-
-              <Card.Footer className="font-heading font-bold text-2xl z-10 mt-auto flex-col flex">
-                {character.name.get()}
-                <div class="flex items-center justify-between text-xs font-body text-foreground/80">
-                  <span>{character.path.name.get()}</span>
-                  <span>{`${character.stars}★`}</span>
-                </div>
-              </Card.Footer>
-            </Card>
-          </a>
-        ))
-      }
-    </div>
+    <CharacterFilter characters={characterData} client:load />
   </main>
 </Layout>
