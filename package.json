@@ -17,11 +17,10 @@
 		"@astrojs/react": "^5.0.3",
 		"@heroui/react": "^3.0.2",
 		"@heroui/styles": "^3.0.2",
-		"@lucide/astro": "^1.7.0",
-		"astro": "^6.1.4",
+		"astro": "^6.1.5",
 		"lucide-react": "^1.7.0",
-		"react": "^19.2.4",
-		"react-dom": "^19.2.4",
+		"react": "^19.2.5",
+		"react-dom": "^19.2.5",
 		"starrail.js": "^1.9.8"
 	},
 	"devDependencies": {

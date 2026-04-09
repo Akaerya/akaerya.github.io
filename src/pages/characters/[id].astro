@@ -1,9 +1,9 @@
 ---
 import { allCharacters, getCharacterName } from "@data/characters";
 import Layout from "@layouts/Layout.astro";
-import { ArrowLeft } from "@lucide/astro";
 import { formatText } from "@utils/text";
 import { url } from "@utils/url";
+import { ArrowLeftIcon } from "lucide-react";
 
 export function getStaticPaths() {
   return allCharacters.map((character) => ({
@@ -53,7 +53,7 @@ const stars = "★".repeat(character.stars);
           href={url("/characters")}
           class="mb-4 inline-flex items-center gap-1 text-sm text-foreground/60 hover:text-foreground transition-colors"
         >
-          <ArrowLeft size={16} /> All Characters
+          <ArrowLeftIcon size={16} /> All Characters
         </a>
         <h1
           class="font-heading text-5xl font-bold text-foreground drop-shadow-md"

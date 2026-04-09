@@ -21,7 +21,7 @@ import {
 	ToggleButton,
 	ToggleButtonGroup,
 } from "@heroui/react";
-import { Asterisk } from "lucide-react";
+import { AsteriskIcon } from "lucide-react";
 import { useState } from "react";
 
 const ELEMENTS = [
@@ -123,8 +123,8 @@ export function CharacterFilter({ characters }: Props) {
 						selectionMode="single"
 						selectedKeys={new Set([selectedElement])}
 						onSelectionChange={handleElementChange}
-            size="lg"
-            className="flex flex-wrap justify-start gap-2"
+						size="lg"
+						className="flex flex-wrap justify-start gap-2"
 					>
 						<ToggleButton
 							key="all"
@@ -132,7 +132,7 @@ export function CharacterFilter({ characters }: Props) {
 							isIconOnly
 							aria-label="All elements"
 						>
-							<Asterisk className="size-6" />
+							<AsteriskIcon className="size-6" />
 						</ToggleButton>
 						{ELEMENTS.map((el) => (
 							<ToggleButton
@@ -157,11 +157,11 @@ export function CharacterFilter({ characters }: Props) {
 						selectionMode="single"
 						selectedKeys={new Set([selectedPath])}
 						onSelectionChange={handlePathChange}
-            size="lg"
-            className="flex flex-wrap justify-start gap-2"
+						size="lg"
+						className="flex flex-wrap justify-start gap-2"
 					>
 						<ToggleButton key="all" id="all" isIconOnly aria-label="All paths">
-							<Asterisk className="size-6" />
+							<AsteriskIcon className="size-6" />
 						</ToggleButton>
 						{PATHS.map((path) => (
 							<ToggleButton
@@ -170,7 +170,11 @@ export function CharacterFilter({ characters }: Props) {
 								isIconOnly
 								aria-label={path.label}
 							>
-								<img src={path.icon.src} alt={path.label} className="size-5 invert dark:invert-0" />
+								<img
+									src={path.icon.src}
+									alt={path.label}
+									className="size-5 invert dark:invert-0"
+								/>
 							</ToggleButton>
 						))}
 					</ToggleButtonGroup>
@@ -186,15 +190,30 @@ export function CharacterFilter({ characters }: Props) {
 						selectionMode="single"
 						selectedKeys={new Set([selectedRarity])}
 						onSelectionChange={handleRarityChange}
-            size="lg"
+						size="lg"
 					>
-						<ToggleButton key="all" id="all" isIconOnly aria-label="All rarities">
-							<Asterisk className="size-6" />
+						<ToggleButton
+							key="all"
+							id="all"
+							isIconOnly
+							aria-label="All rarities"
+						>
+							<AsteriskIcon className="size-6" />
 						</ToggleButton>
-						<ToggleButton key="4" id="4" aria-label="4 Stars" className="font-semibold">
+						<ToggleButton
+							key="4"
+							id="4"
+							aria-label="4 Stars"
+							className="font-semibold"
+						>
 							4★
 						</ToggleButton>
-						<ToggleButton key="5" id="5" aria-label="5 Stars" className="font-semibold">
+						<ToggleButton
+							key="5"
+							id="5"
+							aria-label="5 Stars"
+							className="font-semibold"
+						>
 							5★
 						</ToggleButton>
 					</ToggleButtonGroup>

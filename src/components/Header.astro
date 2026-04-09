@@ -1,7 +1,7 @@
 ---
 import { Button } from "@heroui/react";
-import { Moon, Sun } from "@lucide/astro";
 import { url } from "@utils/url";
+import { MoonIcon, SunIcon } from "lucide-react";
 ---
 
 <header class="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md">
@@ -24,8 +24,8 @@ import { url } from "@utils/url";
 			aria-label="Toggle theme"
 			className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-foreground/15 bg-surface text-foreground/70 transition-colors hover:bg-foreground/10 hover:text-foreground"
 		>
-			<Sun class="block dark:hidden" size={16} />
-			<Moon class="hidden dark:block" size={16} />
+			<SunIcon className="block dark:hidden" size={16} />
+			<MoonIcon className="hidden dark:block" size={16} />
 		</Button>
 	</div>
 </header>
