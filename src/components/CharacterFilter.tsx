@@ -112,7 +112,7 @@ export function CharacterFilter({ characters }: Props) {
 			</SearchField>
 
 			{/* Filters */}
-			<div className="flex flex-col gap-x-6 gap-y-4">
+			<div className="flex flex-wrap gap-x-6 gap-y-4">
 				{/* Element filter */}
 				<div className="flex flex-col gap-2">
 					<span className="font-medium text-foreground/50 text-xs uppercase tracking-widest">
@@ -187,7 +187,6 @@ export function CharacterFilter({ characters }: Props) {
 						selectedKeys={new Set([selectedRarity])}
 						onSelectionChange={handleRarityChange}
             size="lg"
-            className="flex flex-wrap justify-start gap-2"
 					>
 						<ToggleButton key="all" id="all" isIconOnly aria-label="All rarities">
 							<Asterisk className="size-6" />
