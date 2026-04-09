@@ -243,8 +243,12 @@ export function CharacterFilter({ characters }: Props) {
 									/>
 								</div>
 							</Card.Header>
-							<Card.Footer className="z-10 mt-auto flex flex-col items-start font-bold font-heading text-2xl">
-								{character.name}
+							<Card.Footer className="z-10 mt-auto flex flex-col items-start font-bold font-heading">
+								<span
+									className={`${character.name.length > 14 ? "text-xl" : "text-2xl"}`}
+								>
+									{character.name}
+								</span>
 								<div className="flex w-full items-center justify-between font-body text-foreground/80 text-xs">
 									<span>{character.path}</span>
 									<span>{`${character.stars}★`}</span>
