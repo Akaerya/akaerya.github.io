@@ -2,6 +2,7 @@
 import { allCharacters, getCharacterName } from "@data/characters";
 import Layout from "@layouts/Layout.astro";
 import { ArrowLeft } from "@lucide/astro";
+import { formatText } from "@utils/text";
 import { url } from "@utils/url";
 
 export function getStaticPaths() {
@@ -80,12 +81,9 @@ const stars = "★".repeat(character.stars);
       <!-- Description -->
       {
         character.description.get() && (
-          <p class="text-foreground/70 leading-relaxed text-base">
-            {character.description.get()}
-          </p>
+          <p class="text-foreground/70 leading-relaxed text-base" set:html={formatText(character.description.get())} />
         )
       }
-
       <!-- Skills -->
       <section>
         <h2 class="mb-5 text-xl font-semibold text-foreground tracking-tight">
@@ -109,7 +107,7 @@ const stars = "★".repeat(character.stars);
                     {skillTypeLabel[skill.skillType] ?? skill.skillType}
                   </span>
                   <span class="text-sm font-semibold text-foreground leading-snug">
-                    {skill.name.get()}
+                    {formatText(skill.name.get())}
                   </span>
                 </div>
               ),
@@ -141,7 +139,7 @@ const stars = "★".repeat(character.stars);
                     E{eidolon.rank}
                   </span>
                   <span class="text-sm text-foreground/70">
-                    {eidolon.name.get()}
+                    {formatText(eidolon.name.get())}
                   </span>
                 </div>
               ),
