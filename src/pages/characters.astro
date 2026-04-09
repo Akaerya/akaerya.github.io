@@ -16,7 +16,7 @@ const characterData: CharacterData[] = allCharacters.map((character) => ({
   elementIconUrl: getImageUrl(character.combatType.icon.path),
   stars: character.stars,
   href: url(`/characters/${character.id}`),
-}));
+})).sort((a, b) => a.name.localeCompare(b.name));
 ---
 
 <Layout title="Characters">
