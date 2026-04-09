@@ -1,19 +1,15 @@
 ---
+import {
+  type CharacterData,
+  CharacterFilter,
+} from "@components/CharacterFilter";
+import { allCharacters, getCharacterName } from "@data/characters";
 import Layout from "@layouts/Layout.astro";
 import { getImageUrl, url } from "@utils/url";
-import { StarRail } from "starrail.js";
-import { CharacterFilter, type CharacterData } from "@components/CharacterFilter";
-
-const client = new StarRail({
-  cacheDirectory: "./cache",
-  showFetchCacheLog: false,
-});
-
-const allCharacters = client.getAllCharacters();
 
 const characterData: CharacterData[] = allCharacters.map((character) => ({
   id: character.id,
-  name: character.name.get(),
+  name: getCharacterName(character.id, character.name.get()),
   element: character.combatType.name.get(),
   path: character.path.name.get(),
   cardImageUrl: getImageUrl(character.shopItemIcon.path),
