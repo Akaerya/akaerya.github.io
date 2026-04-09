@@ -15,6 +15,7 @@ export default defineConfig({
 			dataset: "production",
 			useCdn: false,
 			studioBasePath: "/admin",
+			studioRouterHistory: "hash",
 		}),
 	],
 	vite: {
