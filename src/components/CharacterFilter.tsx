@@ -228,7 +228,7 @@ export function CharacterFilter({ characters }: Props) {
 						href={character.href}
 						className="group outline-none"
 					>
-						<Card className="h-60 w-40 border border-border/60 transition-transform group-hover:scale-[1.03] group-focus-visible:ring-2 group-focus-visible:ring-foreground">
+						<Card className="h-60 w-40 overflow-hidden border border-border/60 transition-transform group-hover:scale-[1.03] group-focus-visible:ring-2 group-focus-visible:ring-foreground">
 							<img
 								src={character.cardImageUrl}
 								alt={character.name}
