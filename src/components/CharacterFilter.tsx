@@ -235,7 +235,7 @@ export function CharacterFilter({ characters }: Props) {
 								className="absolute inset-0 h-full w-full object-cover"
 							/>
 							<Card.Header>
-								<div className="absolute inset-0 flex h-9 w-14 items-center justify-center gap-x-2 rounded-br-lg bg-surface-secondary/60">
+								<div className="absolute inset-0 flex h-8 w-12 items-center justify-center gap-x-2 rounded-br-lg bg-surface-secondary/60">
 									<img
 										src={character.elementIconUrl}
 										alt={character.element}
